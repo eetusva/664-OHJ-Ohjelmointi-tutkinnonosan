@@ -1,0 +1,45 @@
+RessuKisaLaskuri
+
+Mobiiliyhteensopiva
+Tietokanta: IndexedDB
+Tietoturva, koska nimi-/yhdistystietoja (kryptaus?)
+
+Etusivu:
+  -Otsikko
+  -Linkit: KisanLuonti, KilpailijanLuonti, Laskuri, Tulokset
+  -Tietokannan tyhjennys-nappi
+
+KisanLuonti:
+Suoritetaan ensimmäisenä
+  -Linkki etusivulle
+  -Mahdollisuus tietojen muuttamiseen/poistamiseen
+  Kerättävä tieto:
+    -Järjestävä yhdistys
+    -Kilpailupaikka
+    -Kilpailun ajankohta
+    -Laukausmäärä
+
+KilpailijanLuonti:
+Suoritetaan toisena
+  -Linkki etusivulle
+  -Mahdollisuus tietojen muuttamiseen/poistamiseen
+  Kerättävä tieto:
+    -Etunimi, Sukunimi
+    -Yhdistys/seura
+    -Luokka: Avoin, Vakio
+    -Sarja: [Junior, Yleinen, Senior], [Lady]
+
+Laskuri:
+  -Linkit: etusivu, tulokset
+  -Osumien määrä == laukausmäärä [Osumanäyttö]
+  -Näppäimistö: X, 10-0, korjaus, tallennus
+
+Tulokset:
+  -Linkit: Etusivu, Laskuri
+  -Tulokset järjestykseen
+  -Järjestäjän tiedot: Yhdistys Paikka Aika
+  -Kilpailija: Sijoitus Etunimi Sukunimi [kaikki osumat] yhteistulos
+
+Extrat:
+  -Tuloksista tulostus-/sähköposti-kelpoinen HTML-sivu
+  -App-launcher
