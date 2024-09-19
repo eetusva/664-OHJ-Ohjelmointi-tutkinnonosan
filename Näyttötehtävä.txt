@@ -1,21 +1,34 @@
 RessuKisaLaskuri
 
+Deadline: 9.10.-24
+
 Mobiiliyhteensopiva
 Tietokanta: IndexedDB
-Tietoturva, koska nimi-/yhdistystietoja (kryptaus?)
+Tietoturva, koska nimi-/yhdistystietoja (kryptaus?, GDPR-ohje) Web Cryptography API: AES-salausmetodi selaimessa
+Yleinen tietosuoja-asetus:
+	https://europa.eu/youreurope/business/dealing-with-customers/data-protection/data-protection-gdpr/index_fi.htm
+
+GDPR-ohjesivu: ohjeistus ennen tallennusta
+Validoinnit
+Error Handling
+SPA-tyyli
+Moduulirakenne
+
+Ohjesivu: 
+  -
 
 Etusivu:
   -Otsikko
   -Linkit: KisanLuonti, KilpailijanLuonti, Laskuri, Tulokset
-  -Tietokannan tyhjennys-nappi
+  -Tietokannan tyhjennys-nappi (aplikaation sulkeutuessa myös tyhjennys)
 
 KisanLuonti:
 Suoritetaan ensimmäisenä
   -Linkki etusivulle
   -Mahdollisuus tietojen muuttamiseen/poistamiseen
   Kerättävä tieto:
-    -Järjestävä yhdistys
-    -Kilpailupaikka
+    -Järjestävä yhdistys  
+    -Kilpailupaikka	
     -Kilpailun ajankohta
     -Laukausmäärä
 
@@ -27,7 +40,7 @@ Suoritetaan toisena
     -Etunimi, Sukunimi
     -Yhdistys/seura
     -Luokka: Avoin, Vakio
-    -Sarja: [Junior, Yleinen, Senior], [Lady]
+    -Sarja: [Junior, Yleinen, Senior], [Lady]	('radio', 'checkbox')
 
 Laskuri:
   -Linkit: etusivu, tulokset
