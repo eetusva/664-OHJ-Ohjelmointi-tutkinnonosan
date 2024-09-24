@@ -1,0 +1,47 @@
+
+body {
+    font-family: 'Classica', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background:linear-gradient(#73d376,#ccc);
+}
+
+
+
+.login-container {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+#login-form,#registration_form{
+    
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.radiot{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
