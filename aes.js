@@ -1,55 +1,44 @@
-// Tekstin salaus Web Cryptography API (crypto.subtle)
-async function salaaData(data, salasana) {
-    // salasana Uint8Array-muotoon
-    const enc = new TextEncoder();
-    const salasanaData = enc.encode(salasana);
-
-    // kryptinen avain
-    const avain = await crypto.subtle.importKey(
-        'raw',
-        salasanaData,
-        { nimi: 'AES-GCM' },
-        false,
-        ['encrypt']
+// AES-salauksen avaimen luonti
+export async function generateKey() {
+    return crypto.subtle.generateKey(
+        {
+            name: "AES-GCM",
+            length: 128,
+        },
+        true, // Avain on exportattavissa
+        ["encrypt", "decrypt"] // sekä salaus että purku
     );
+}
 
-    //Uint8Array
-    const dataPuskuri = enc.encode(data);
-    //initVector + salaus
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const salattu = await crypto.subtle.encrypt(
-        {nimi: 'AES-GCM',
-        iv: iv},
-        avain,
-        dataPuskuri
+// Salataan tiedot
+export async function encryptData(key, data) {
+    const encoder = new TextEncoder();
+    const iv = crypto.getRandomValues(new Uint8Array(12)); // Alustusvektori (IV)
+    const encodedData = encoder.encode(JSON.stringify(data));
+    
+    const encryptedData = await crypto.subtle.encrypt(
+        {
+            name: "AES-GCM",
+            iv: iv,
+        },
+        key,
+        encodedData
     );
+    
+    return { encryptedData, iv };
+}
 
-    return {iv:iv, salattuData: new Uint8Array(salattu)};
-};
-
-// salauksen purku
-async function puraSalattuData(salattuData, salasana, iv) {
-    const enc = new TextEncoder();
-    const salasanaData = enc.encode(salasana);
-
-    // kryptografinen avain
-    const avain = await crypto.subtle.importKey(
-        'raw',
-        salasanaData,
-        { nimi: 'AES-GCM' },
-        false,
-        ['decrypt']
+// Puretaan tiedot
+export async function decryptData(key, encryptedData, iv) {
+    const decryptedData = await crypto.subtle.decrypt(
+        {
+            name: "AES-GCM",
+            iv: iv,
+        },
+        key,
+        encryptedData
     );
-
-    // Pura kryptaus
-    const purettu = await crypto.subtle.decrypt(
-        { nimi: 'AES-GCM', iv: iv },
-        avain,
-        salattuData
-    );
-
-    // Muutetaan takaisin tekstiksi
-    const dec = new TextDecoder();
-    return dec.decode(purettu);
-};
-
+    
+    const decoder = new TextDecoder();
+    return JSON.parse(decoder.decode(decryptedData));
+}
