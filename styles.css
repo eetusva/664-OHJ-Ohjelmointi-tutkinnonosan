@@ -1,7 +1,74 @@
-body {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: auto;
+    font-family: monospace;
+    background-image: url('bck-grnd.jpg');
+    background-repeat: repeat;
+    background-size: cover; 
+}
+
+.login-container {
+    width: 95vw;
+    margin: 25vh auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+#login-form,#registration_form{
+    
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.radiot{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.kontti {
+    width: 95vw;
+    margin: 0 auto;
+}
+
+table {
+    margin-top: 35%;
+    padding: 1vh 1vw;
+    width: 95vw;
+    text-align: center;
+    font-weight: 600;
+    color: darkolivegreen;
+    background-color: lightgreen;
+}
+
+tr:nth-child(even) {
+    background-color: aliceblue;
+}
+
+thead {
+    font-size: x-large;
+    background-color: lightcyan;
 }
 
 #info {
@@ -11,16 +78,11 @@ body {
     border-radius: 50%;
 }
 
-#kontti {
-    display: grid;
-    margin: 5px auto;
-    width: 90vw;
-}
-
 button, button a {
     text-decoration: none;
     padding: 3px 10px;
     background-color: darkgreen;
     color: antiquewhite;
+    cursor: pointer;
     border-radius: 5px;
 }

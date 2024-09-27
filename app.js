@@ -1,7 +1,4 @@
 
-
-
-
 document.addEventListener('DOMContentLoaded',() => {
     // kontti
     let loginContainer = document.createElement('div');
@@ -185,11 +182,7 @@ document.addEventListener('DOMContentLoaded',() => {
 
     // Lopuksi lisätään koko kontaineri sivulle
     document.body.appendChild(loginContainer);
-
-
 })
-
-
 
 
 
@@ -231,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         haeKilpailija(db, etunimi, sukunimi, tulos_naytto);
     });
-
    
 
     // Kilpailijan haku ID:n perusteella
@@ -240,15 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let kilpailijaId = parseInt(document.getElementById('search-id').value, 10);
         let tulos_naytto = document.getElementById('search-result');
-
        
         const { haeKilpailijaIDlla } = await import('./haku.js');
         haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto);
     });
 });
-
-
-
-
-
-

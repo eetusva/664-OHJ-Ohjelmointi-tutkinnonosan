@@ -1,44 +1,71 @@
-// AES-salauksen avaimen luonti
-export async function generateKey() {
-    return crypto.subtle.generateKey(
+async function luoAvain() {
+    const avain = await crypto.subtle.generateKey(
         {
-            name: "AES-GCM",
-            length: 128,
+            nimi: "AES-GCM",
+            pituus: 128, // Avaimen pituus
         },
-        true, // Avain on exportattavissa
-        ["encrypt", "decrypt"] // sekä salaus että purku
+        true, // exportattava avain
+        ["encrypt", "decrypt"]
     );
+    hashAvain(avain).then(hash => console.log(hash));
+    return avain;
 }
 
-// Salataan tiedot
-export async function encryptData(key, data) {
+async function salattavatTiedot(tiedot) {
+
+    const avain = await luoAvain(); // Luo AES-avain
     const encoder = new TextEncoder();
-    const iv = crypto.getRandomValues(new Uint8Array(12)); // Alustusvektori (IV)
-    const encodedData = encoder.encode(JSON.stringify(data));
+    const encodedMessage = encoder.encode(tiedot);    
+    
+    // Initaalinen satunnainen IV (initialization vector) tarvitaan AES-GCM:ssa
+    const iv = crypto.getRandomValues(new Uint8Array(12)); 
     
     const encryptedData = await crypto.subtle.encrypt(
         {
-            name: "AES-GCM",
-            iv: iv,
+            nimi: "AES-GCM",
+            iv: iv, // initial vector
         },
-        key,
-        encodedData
+        avain, // CryptoKey-objekti
+        encodedMessage // Salattava viesti
     );
-    
-    return { encryptedData, iv };
+
+    return { encryptedData, iv }; // Palautetaan sekä salattu data että iv
 }
 
-// Puretaan tiedot
-export async function decryptData(key, encryptedData, iv) {
-    const decryptedData = await crypto.subtle.decrypt(
+async function puraTiedot(avain, salattuData, iv) {
+    const purettavaData = await crypto.subtle.decrypt(
         {
-            name: "AES-GCM",
-            iv: iv,
+            nimi: "AES-GCM",
+            iv: iv, // Sama iv kuin salauksessa
         },
-        key,
-        encryptedData
+        avain, // CryptoKey-objekti
+        salattuData
     );
     
     const decoder = new TextDecoder();
-    return JSON.parse(decoder.decode(decryptedData));
+    return decoder.decode(purettavaData);
+}
+
+export async function runAES(toiminto, tiedot, avain) {
+    
+
+    if (toiminto == 'salaa') {    
+        // Salaa viesti
+        const { encryptedData, iv } = await salattavatTiedot(tiedot);
+        console.log("Salatut tiedot:", new Uint8Array(encryptedData));
+    } else if (toiminto == 'pura') {
+        // Pura viesti
+        const { encryptedData, iv } = await salattavatTiedot(tiedot);
+        const decryptedMessage = await puraTiedot(avain, encryptedData, iv);
+        console.log("Puretut tiedot:", decryptedMessage);
+    }
+}
+
+async function hashAvain(avain) {
+    const encoder = new TextEncoder(); // Tekstinkoodaus UTF-8 muotoon
+    const data = encoder.encode(avain);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data); // Hajautus
+    const hashArray = Array.from(new Uint8Array(hashBuffer)); // Muutetaan tavut taulukoksi
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex; // Palautetaan heksadesimaalinen hajautus
 }

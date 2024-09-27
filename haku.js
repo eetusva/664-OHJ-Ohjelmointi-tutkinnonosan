@@ -8,12 +8,6 @@ export function haeKilpailija(db, etunimi, sukunimi, tulos_naytto) {
         if (cursor) {
             if (cursor.value.etunimi === etunimi && cursor.value.sukunimi === sukunimi) {
                 let kilpailijaDiv = document.createElement('div');
-                
-
-                
-
-
-
 
                 kilpailijaDiv.innerHTML = `
                     <p> Löytyi kilpailija: ${cursor.value.id}  ${cursor.value.etunimi} ${cursor.value.sukunimi}, Seura: ${cursor.value.seura}, Luokka: ${cursor.value.luokka}</p>
@@ -33,9 +27,6 @@ export function haeKilpailija(db, etunimi, sukunimi, tulos_naytto) {
                             tulos_naytto.textContent = '';
                         }, 5000);
                         document.getElementById('search-form').reset();
-
-
-
                     };
 
                     deleteRequest.onerror = function(event) {
@@ -51,11 +42,8 @@ export function haeKilpailija(db, etunimi, sukunimi, tulos_naytto) {
                     tulos_naytto.textContent = '';
                 }, 5000);
                 document.getElementById('search-form').reset();
-
-
-
-
             }
+
             cursor.continue();
         } else {
             if (!found) {
@@ -64,6 +52,7 @@ export function haeKilpailija(db, etunimi, sukunimi, tulos_naytto) {
         }
     };
 }
+
 export function haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto) {
     let transaction = db.transaction(['Kilpailijat'], 'readonly');
     let objectStore = transaction.objectStore('Kilpailijat');
@@ -79,19 +68,29 @@ export function haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto) {
             tulos_naytto.textContent = `Kilpailijaa ID:llä ${kilpailijaId} ei löydy.`;
         }
 
-
         setTimeout(() => {
             tulos_naytto.textContent = '';
         }, 5000);
         document.getElementById('search-id-form').reset();
-
-
-
-
-
     };
 
     request.onerror = function(event) {
         console.error('Kilpailijan hakeminen epäonnistui', event);
     };
+}
+
+export async function haeAvain(db, avain) {
+    let transaction = db.transaction(['Avaimet'], 'readonly');
+    let objectStore = transaction.objectStore('Avaimet');
+    
+    let request = objectStore.get(avain);
+
+    request.onsuccess = function(event) {
+        let avain = request.result;
+        return avain
+    }
+
+    request.onerror = function(event) {
+        console.error('Avaimen haku epäonnistui', event);
+    };    
 }

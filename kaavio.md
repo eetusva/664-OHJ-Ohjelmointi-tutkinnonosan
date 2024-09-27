@@ -4,11 +4,11 @@ graph TD;
     etusivu-->luoKilpailu;
     etusivu-->luoKilpailija
     etusivu-->laskuri
-    etusivu-->tulokset
-    tulokset-->etusivu
+    etusivu-->tulokset    
     luoKilpailu-->etusivu
     luoKilpailija-->etusivu
     laskuri-->etusivu
+    tulokset-->etusivu
     luoKilpailu-->objectStore-kilpailu
     objectStore-kilpailu-->tallenna-kilpaluDB;
     tallenna-kilpaluDB-->luoKilpailija;
