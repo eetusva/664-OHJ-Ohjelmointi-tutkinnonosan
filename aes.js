@@ -1,3 +1,4 @@
+
 async function luoAvain() {
     const avain = await crypto.subtle.generateKey(
         {
@@ -7,8 +8,15 @@ async function luoAvain() {
         true, // exportattava avain
         ["encrypt", "decrypt"]
     );
+
+    const { avaaTietokanta } = await import('./db.js');
+    avaaTietokanta()
+
+    const { tallennaAvain } = await import('./tallenna.js');
+    tallennaAvain(db, avain)
+
     hashAvain(avain).then(hash => console.log(hash));
-    return avain;
+    return avain; // Hashatty avain (kilpailijan id:ksi)
 }
 
 async function salattavatTiedot(tiedot) {
@@ -46,8 +54,7 @@ async function puraTiedot(avain, salattuData, iv) {
     return decoder.decode(purettavaData);
 }
 
-export async function runAES(toiminto, tiedot, avain) {
-    
+export async function runAES(toiminto, tiedot, avain) {    
 
     if (toiminto == 'salaa') {    
         // Salaa viesti
@@ -61,10 +68,10 @@ export async function runAES(toiminto, tiedot, avain) {
     }
 }
 
-async function hashAvain(avain) {
+async function hashAvain(avain) {  //SHA-256 hajautusfunktio
     const encoder = new TextEncoder(); // Tekstinkoodaus UTF-8 muotoon
     const data = encoder.encode(avain);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data); // Hajautus
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data); // Hajautus (tavuiksi)
     const hashArray = Array.from(new Uint8Array(hashBuffer)); // Muutetaan tavut taulukoksi
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     return hashHex; // Palautetaan heksadesimaalinen hajautus

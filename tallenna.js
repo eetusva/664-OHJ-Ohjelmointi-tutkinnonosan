@@ -19,3 +19,18 @@ export function tallennaKilpailija(db, uusiKayttaja, tulos_naytto) {
         console.error('Tietojen tallentaminen epäonnistui', event);
     };
 }
+
+export function tallennaAvain(db, avain) {
+    let transaction = db.transaction(['Avaimet'], 'readwrite');
+    let objectStore = transaction.objectStore('Avaimet');
+    let request = objectStore.add(avain);
+
+    request.onsuccess = function(event) {
+        let tallennettuAvain = request.result;
+        console.log(`Avaimen ${tallennettuAvain} tallennus onnistui`, event)
+    };
+
+    request.onerror = function(event) {
+        console.error('Avaimen tallennus epäonnistui!!!', event);
+    }
+}

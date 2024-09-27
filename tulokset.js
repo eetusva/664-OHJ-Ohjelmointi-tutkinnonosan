@@ -57,51 +57,53 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.appendChild(rivi); //lisätään rivit tbodyyn
     }
 
-    function kaikkiKilpailijat(){
-        let request = indexedDB.open('KilpailuDB');        
-
-        request.onsuccess = function(event) {
-            let db = event.target.result;
-            let transaction = db.transaction(['kilpailijat'], 'readonly');
-            let objectStore = transaction.objectStore('kilpailijat');
-            
-            let getAllRequest = objectStore.getAll();
-
-            getAllRequest.onsuccess = function(event) {
-                console.log(event.target.result); // Tulostaa kaikki tietueet konsoliin
+    function haeKilpailijat() {
+        return new Promise((resolve, reject) => {
+            // Avataan tietokanta
+            const request = indexedDB.open('Kilpailijatietokanta', 1);
+    
+            request.onerror = function(event) {
+                console.error('Tietokannan avaus epäonnistui.', event);
+                reject('Tietokannan avaus epäonnistui.');
             };
-            
-            getAllRequest.onerror = function(event) {
-                console.error("Tietojen hakeminen epäonnistui.");
+    
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                const transaction = db.transaction('Kilpailijat', 'readonly');
+                const objectStore = transaction.objectStore('Kilpailijat');
+    
+                const kilpailijat = [];
+    
+                // Hakee kaikki objektit (arvot) objectStoresta
+                const requestAll = objectStore.openCursor();
+    
+                requestAll.onsuccess = function(event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        kilpailijat.push(cursor.value); // Lisätään arvot listaan
+                        cursor.continue(); // Siirrytään seuraavaan objektiin
+                    } else {
+                        // Kaikki tiedot on haettu, palautetaan arvot
+                        resolve(kilpailijat);
+                    }
+                };
+    
+                requestAll.onerror = function(event) {
+                    console.error('Tietojen haku epäonnistui.', event);
+                    reject('Tietojen haku epäonnistui.');
+                };
             };
-        };
-    }    
-
-    // esim avain/arvo-pareista (tähän tietokannan tiedot)
-    const data = [
-        { nimi: 'Leila '+'K', osumat: ['X','X','X',10,10,10,9,9,9,8], tulos: 95 },
-        { nimi: 'Marilyn '+'Manson', osumat: 'X,X,10,10,10,10,9,9,9,8', tulos: 95 },
-        { nimi: 'Unski '+'', osumat: ('X,X,X,X,X,10,10,10,9,6'), tulos: 95 },
-        { nimi: 'Norman '+'Bates', osumat: ['X','X','X',10,10,10,9,9,9,8], tulos: 95 },
-        { nimi: 'Volvo '+'Markkanen', osumat: 'X,X,10,10,10,10,9,9,9,8', tulos: 95 },
-        { nimi: 'Juhan '+'af Grahn', osumat: ('X,X,X,X,X,10,10,10,9,6'), tulos: 95 },
-        { nimi: 'Edgar '+'Burroughs', osumat: ['X','X','X',10,10,10,9,9,9,8], tulos: 95 },
-        { nimi: 'Viki '+'', osumat: 'X,X,10,10,10,10,9,9,9,8', tulos: 95 },
-        { nimi: 'Köpi '+'', osumat: ('X,X,X,X,X,10,10,10,9,6'), tulos: 95 },
-        { nimi: 'Pii '+'Ketvel', osumat: ['X','X','X',10,10,10,9,9,9,8], tulos: 95 },
-        { nimi: 'Roo '+'Ketvel', osumat: 'X,X,10,10,10,10,9,9,9,8', tulos: 95 },
-        { nimi: 'Isaac '+'Asimov', osumat: ('X,X,X,X,X,10,10,10,9,6'), tulos: 95 },
-        { nimi: 'Jana '+'Exposito', osumat: ['X','X','X',10,10,10,9,9,9,8], tulos: 95 },
-        { nimi: 'Keke '+'Rosberg', osumat: 'X,X,10,10,10,10,9,9,9,8', tulos: 95 },
-        { nimi: 'Bro '+'Alien', osumat: ('X,X,X,X,X,10,10,10,9,6'), tulos: 95 },
-        { nimi: 'Master '+'', osumat: ['X','X','X',10,10,10,9,9,9,8], tulos: 95 },
-        { nimi: 'Blaster '+'', osumat: 'X,X,10,10,10,10,9,9,9,8', tulos: 95 },
-        { nimi: 'Humangus '+'', osumat: ('X,X,X,X,X,10,10,10,9,6'), tulos: 95 }
-    ];
-
-    // datan läpikäynti + rivinlisäys
-    data.forEach(item => {
-        lisaaRivi(item.nimi, item.osumat, item.tulos);
-    });
+        });
+    }
+    
+    // Esimerkki: kutsu ja käyttö
+    haeKilpailijat().then((kilpailijat) => {
+        kilpailijat.forEach(item => {
+            lisaaRivi(item.etunimi+' '+item.sukunimi, item.seura, item.luokka)
+        })
+        console.log('Kilpailijat:', kilpailijat);
+    }).catch((error) => {
+        console.error(error);
+    });    
 
 });
