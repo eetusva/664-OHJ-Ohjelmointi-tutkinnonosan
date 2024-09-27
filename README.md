@@ -12,6 +12,7 @@ ver. 0.02
 ver. 0.03   
 
 - Mermaid kaavio  
-- tulokset.js pohja
+- tulokset.js perusfunktiot
 - styles.css päivitys
-- AES-päivitys + SHA-256 hajautus (perusmuodot)  
+- AES-päivitys + SHA-256 hajautus (perusmuodot)
+- db.js objectStoret
