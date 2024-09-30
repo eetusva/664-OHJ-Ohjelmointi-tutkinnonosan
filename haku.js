@@ -94,3 +94,20 @@ export async function haeAvain(db, avain) {
         console.error('Avaimen haku epäonnistui', event);
     };    
 }
+export function haeKaikkiKilpailijat(db) {
+    return new Promise((resolve, reject) => {
+        let transaction = db.transaction(['Kilpailijat'], 'readonly');
+        let objectStore = transaction.objectStore('Kilpailijat');
+        let request = objectStore.getAll();
+
+        request.onsuccess = function(event) {
+            resolve(request.result);  // Palauttaa listan kilpailijoista
+        };
+
+        request.onerror = function(event) {
+            console.error("Kilpailijoiden haku epäonnistui", event);
+            reject('Kilpailijoiden haku epäonnistui');
+        };
+    });
+
+}
