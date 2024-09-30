@@ -1,7 +1,11 @@
 
+let loginContainer;
+let db;
+import { paivitaPisteet } from './pisteet.js';
+
 document.addEventListener('DOMContentLoaded',() => {
     // kontti
-    let loginContainer = document.createElement('div');
+    loginContainer = document.createElement('div');
     loginContainer.className = 'login-container';
 
     // --- Lomake 1: Lisää kilpailija ---
@@ -33,7 +37,6 @@ document.addEventListener('DOMContentLoaded',() => {
     sukunimiInput.setAttribute('name', 'sukunimi');
     sukunimiInput.id = 'sukunimi';
     sukunimiInput.required = true;
-
     // Seura
     let seuraLabel = document.createElement('label');
     seuraLabel.setAttribute('for', 'seura');
@@ -48,8 +51,7 @@ document.addEventListener('DOMContentLoaded',() => {
     // Radio- ja checkbox-valinnat
     let radioDiv = document.createElement('div');
     radioDiv.className = 'radiot';
-
-    
+  
     let juniorRadio = document.createElement('input');
     juniorRadio.setAttribute('type', 'radio');
     juniorRadio.setAttribute('name', 'luokka');
@@ -59,7 +61,6 @@ document.addEventListener('DOMContentLoaded',() => {
     juniorLabel.setAttribute('for', 'junior');
     juniorLabel.textContent = 'Junior';
 
-    
     let yleinenRadio = document.createElement('input');
     yleinenRadio.setAttribute('type', 'radio');
     yleinenRadio.setAttribute('name', 'luokka');
@@ -154,7 +155,6 @@ document.addEventListener('DOMContentLoaded',() => {
     // --- Lomake 3: Hae kilpailija ID:llä ---
     let searchIdForm = document.createElement('form');
     searchIdForm.id = 'search-id-form';
-
     let searchIdInput = document.createElement('input');
     searchIdInput.id = 'search-id';
     searchIdInput.setAttribute('type', 'number');
@@ -173,18 +173,17 @@ document.addEventListener('DOMContentLoaded',() => {
     let backButton = document.createElement('button');
     backButton.textContent = 'Palaa etusivulle';
 
-   
     loginContainer.appendChild(form);
     loginContainer.appendChild(searchForm);
     loginContainer.appendChild(tulos_naytto);
     loginContainer.appendChild(searchIdForm);
     loginContainer.appendChild(backButton);
-
-    // Lopuksi lisätään koko kontaineri sivulle
+    
+    //  lisätään koko kontaineri sivulle
     document.body.appendChild(loginContainer);
+
+
 })
-
-
 
 document.addEventListener('DOMContentLoaded', async () => {
     // tietokannan avaaminen 
@@ -203,14 +202,26 @@ document.addEventListener('DOMContentLoaded', function() {
         let luokka = document.querySelector('input[name="luokka"]:checked');
         luokka = luokka ? luokka.id : null;
 
-        let uusiKayttaja = { etunimi, sukunimi, seura, luokka };
+        
+        let pisteet = 0;
+
+        let uusiKayttaja = { 
+            
+            etunimi, 
+            sukunimi, 
+            seura, 
+            luokka, 
+            pisteet,    // Lisää pisteet
+            osumat: 0,  // Alustetaan osumat
+            napakympit: 0,  // Alustetaan napakympit
+            ammuttu: false //onko henkilö jo kerran ampunut
+        };
 
         // tallennusfunktio 
         const { tallennaKilpailija } = await import('./tallenna.js');
         let tulos_naytto = document.getElementById('search-result');
         tallennaKilpailija(db, uusiKayttaja, tulos_naytto);
     });
-
     // Kilpailijan haku
     document.getElementById('search-form').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -224,16 +235,192 @@ document.addEventListener('DOMContentLoaded', function() {
         
         haeKilpailija(db, etunimi, sukunimi, tulos_naytto);
     });
-   
-
     // Kilpailijan haku ID:n perusteella
     document.getElementById('search-id-form').addEventListener('submit', async function(event) {
         event.preventDefault();
 
         let kilpailijaId = parseInt(document.getElementById('search-id').value, 10);
         let tulos_naytto = document.getElementById('search-result');
+
        
         const { haeKilpailijaIDlla } = await import('./haku.js');
         haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto);
+    });
+});
+//--- Laskuri-osio--- Tämän voisi laittaa omaan moduuliinsa jossain vaiheessa?
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Laskuri-painike
+    let counterButton = document.createElement('button');
+    counterButton.textContent = 'Laskuri';
+    loginContainer.appendChild(counterButton);  // Liitetään painike DOM:iin
+    counterButton.addEventListener('click', async function () {
+        
+        loginContainer.innerHTML = '';
+
+        const { haeKaikkiKilpailijat } = await import('./haku.js'); // Tuo hakufunktio
+        let kilpailijat = await haeKaikkiKilpailijat(db); 
+        
+        
+        let scoreInput = document.createElement('div');
+        scoreInput.className = 'score-input';
+        
+        let selectElement = document.createElement('select');
+        selectElement.id = 'kilpailija-valinta';
+        
+        let addPoints = document.createElement('button');
+        addPoints.id = 'lisaa-pisteet';
+        addPoints.textContent = 'Lisää pisteet kilpailijalle';
+
+        let defaultOption = document.createElement('option');
+        defaultOption.textContent = 'Valitse kilpailija';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        selectElement.appendChild(defaultOption);
+
+        // Lisää kilpailijat pudotusvalikkoon
+        kilpailijat.forEach(kilpailija => {
+            let option = document.createElement('option');
+            option.value = kilpailija.id; // Oletetaan että kilpailijalla on "id"-kenttä
+            option.textContent = `${kilpailija.etunimi} ${kilpailija.sukunimi}`;
+            selectElement.appendChild(option);
+        });
+
+       
+        scoreInput.innerHTML = `
+            <h2>Syötä osumat</h2>
+            <label for="person">Valitse kilpailija</label>
+        `;
+        scoreInput.appendChild(selectElement);
+        //painikkeiden luonti
+        const osumaButtons = document.createElement('div');
+        osumaButtons.className = 'buttons';
+
+        const buttonValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'napakymppi']; //painikkeiden arvot
+
+        buttonValues.forEach(value => {
+            let btn = document.createElement('button');
+            btn.className = 'score-btn';
+            btn.setAttribute('data-value', value);
+            btn.textContent = value === 'napakymppi' ? 'X' : value; // painikkeiden tekstit
+            osumaButtons.appendChild(btn);
+        });
+
+        scoreInput.appendChild(osumaButtons);
+
+        // Tulokset-elementit
+        const results = document.createElement('div');
+        results.className = 'results';
+        results.innerHTML = `
+            <p>Laukausten määrä: <span id="yhteis_osumat">0</span></p>
+            <p>Osumien summa: <span id="yhteis_pisteet">0</span></p>
+            <p>Napakympit: <span id="napakympit">0</span></p>
+        `;
+
+        scoreInput.appendChild(results);
+        loginContainer.appendChild(scoreInput);
+        loginContainer.appendChild(addPoints); // Lisää pisteet-painike lisäys
+
+        // lasketaan osumat ja pisteet
+        let yhteisOsumat = 0;
+        let yhteisPisteet = 0;
+        let napakympit = 0;
+
+        const yhteisOsumatEl = document.getElementById('yhteis_osumat');
+        const yhteisPisteetEl = document.getElementById('yhteis_pisteet');
+        const napakympitEl = document.getElementById('napakympit');
+        const scoreButtons = document.querySelectorAll('.score-btn');
+
+        let kilpailijaId = null;
+        // Kilpailijan vaihto
+        selectElement.addEventListener('change', function () {
+        kilpailijaId = Number(this.value);  // varmistetaan, että kilpailijaId on numero
+        console.log(`Valittu kilpailija ID: ${kilpailijaId}`);
+
+        // Nollataan osumat, pisteet ja napakympit
+        yhteisOsumat = 0;
+        yhteisPisteet = 0;
+        napakympit = 0;
+        
+        
+        yhteisOsumatEl.textContent = yhteisOsumat;
+        yhteisPisteetEl.textContent = yhteisPisteet;
+        napakympitEl.textContent = napakympit;
+
+        // aktivoidaan painikkeet uudelleen
+        scoreButtons.forEach(button => {
+            button.disabled = false;
+        });
+    });
+       
+        selectElement.addEventListener('change', function () {
+        kilpailijaId = Number(this.value); // varmistus että kilpailija Id numerona
+        
+        console.log(`Valittu kilpailija ID: ${kilpailijaId}`);  //  kilpailijaId
+        });
+       
+        // tapahtumankäsittelijä jokaiselle osuma-painikkeelle
+        scoreButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                if (!kilpailijaId) {
+                    alert('Valitse ensin kilpailija!');
+                    return;
+                }
+                let valittuKilpailija = kilpailijat.find(kilpailija => kilpailija.id === kilpailijaId);
+                console.log(valittuKilpailija.ammuttu);
+                if(valittuKilpailija.ammuttu){
+                    alert('Olet jo syöttänyt osumat valitulle kilpailijalle!')
+                    addPoints.disabled = true;
+                    return;
+                }
+                
+                let value = this.getAttribute('data-value');
+        
+               
+                if (value === 'napakymppi') {
+                    yhteisPisteet += 10;
+                    napakympit++;
+                } else {
+                    yhteisPisteet += parseInt(value, 10);
+                }
+        
+                yhteisOsumat++;
+        
+                
+                yhteisOsumatEl.textContent = yhteisOsumat;
+                yhteisPisteetEl.textContent = yhteisPisteet;
+                napakympitEl.textContent = napakympit;
+
+
+                if(yhteisOsumat === 10){
+                    alert('Olet syöttänyt kaikki osumat');
+                    scoreButtons.forEach(button =>{
+                        button.disabled = true;
+                        
+                    })
+                    
+                   
+                }
+            });
+        });
+
+        addPoints.addEventListener('click', function () {
+            if (!kilpailijaId) {
+                alert('Valitse ensin kilpailija!');
+                return;
+            }
+            
+            
+            // lopulliset pisteet
+            paivitaPisteet(db, Number(kilpailijaId), yhteisOsumat, yhteisPisteet, napakympit)
+                .then((message) => {
+                    alert(message);
+                })
+                .catch(error => {
+                    console.error('Pisteiden päivityksessä tapahtui jokin virhe:', error);
+                });
+            addPoints.disabled = true;
+        });
+        
     });
 });
