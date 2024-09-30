@@ -16,3 +16,8 @@ ver. 0.03
 - styles.css päivitys
 - AES-päivitys + SHA-256 hajautus (perusmuodot)
 - db.js objectStoret
+ver.004
+  - laskuri
+  - pisteiden päivitys
+  - pisteiden tallennus
+    
