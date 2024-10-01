@@ -338,27 +338,55 @@ document.addEventListener('DOMContentLoaded', function () {
         kilpailijaId = Number(this.value);  // varmistetaan, että kilpailijaId on numero
         console.log(`Valittu kilpailija ID: ${kilpailijaId}`);
 
-        // Nollataan osumat, pisteet ja napakympit
+        // Nollataan osumat, pisteet ja napakympit uuden kilpailijan osalta
         yhteisOsumat = 0;
         yhteisPisteet = 0;
         napakympit = 0;
         osumalista =[]
-        
-        
+        //lisää pisteee nappi
+        addPoints.disabled = false;
         yhteisOsumatEl.textContent = yhteisOsumat;
         yhteisPisteetEl.textContent = yhteisPisteet;
         napakympitEl.textContent = napakympit;
-
-        // aktivoidaan painikkeet uudelleen
-        scoreButtons.forEach(button => {
-            button.disabled = false;
-        });
     });
        
-        selectElement.addEventListener('change', function () {
+  //Kilpailijan valinta---
+        selectElement.addEventListener('change',async function () {
         kilpailijaId = Number(this.value); // varmistus että kilpailija Id numerona
         
-        console.log(`Valittu kilpailija ID: ${kilpailijaId}`);  //  kilpailijaId
+        let transaction = db.transaction(['Kilpailijat'], 'readonly');
+        let objectStore = transaction.objectStore('Kilpailijat');
+        let request = objectStore.get(kilpailijaId);
+        request.onsuccess = function(event) {
+            let valittuKilpailija = request.result; 
+            
+            if (!valittuKilpailija) {
+                console.error(`Kilpailijaa ID:llä ${kilpailijaId} ei löytynyt.`);
+                return;
+            }
+    
+            console.log(`Valittu kilpailija: `, valittuKilpailija);
+    
+            // Tarkista, onko kilpailija jo ampunut
+            if (valittuKilpailija.ammuttu === true) {
+                alert('Kilpailija on jo suorittanut ammunnan!');
+    
+                // Lukitaan pisteiden syöttöpainikkeet ja tallennuspainike
+                scoreButtons.forEach(button => {
+                    button.disabled = true;
+                });
+                addPoints.disabled = true;
+            } else {
+                
+                addPoints.disabled = false;
+                scoreButtons.forEach(button => {
+                    button.disabled = false;
+                });
+            }
+        };
+
+
+        
         });
        
         // tapahtumankäsittelijä jokaiselle osuma-painikkeelle
