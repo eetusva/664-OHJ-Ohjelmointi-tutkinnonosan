@@ -53,3 +53,6 @@ button {
     border: 5px groove #0b9411;/* testi en tiiä onko hyvä*/
     border-radius: 8px;
 }
+select{
+    font-size: 1em;
+}
