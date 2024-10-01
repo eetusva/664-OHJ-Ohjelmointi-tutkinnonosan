@@ -2,7 +2,7 @@
 let loginContainer;
 let db;
 import { paivitaPisteet } from './pisteet.js';
-
+let osumalista = [];
 document.addEventListener('DOMContentLoaded',() => {
     // kontti
     loginContainer = document.createElement('div');
@@ -201,20 +201,20 @@ document.addEventListener('DOMContentLoaded', function() {
         let seura = document.getElementById('seura').value;
         let luokka = document.querySelector('input[name="luokka"]:checked');
         luokka = luokka ? luokka.id : null;
-
         
-        let pisteet = 0;
-
-        let uusiKayttaja = { 
+       let uusiKayttaja = { 
             
             etunimi, 
             sukunimi, 
             seura, 
             luokka, 
-            pisteet,    // Lisää pisteet
-            osumat: 0,  // Alustetaan osumat
-            napakympit: 0,  // Alustetaan napakympit
-            ammuttu: false //onko henkilö jo kerran ampunut
+            ammuttu: false, //onko henkilö jo kerran ampunut
+            tulokset:{
+                pisteet:0,    // Lisää pisteet
+                osumat: 0,  // Alustetaan osumat
+                napakympit: 0,// Alustetaan napakympit
+                osumalista:[] //osumalista
+            }
         };
 
         // tallennusfunktio 
@@ -315,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <p>Laukausten määrä: <span id="yhteis_osumat">0</span></p>
             <p>Osumien summa: <span id="yhteis_pisteet">0</span></p>
             <p>Napakympit: <span id="napakympit">0</span></p>
+            <h2>Syötit osumat:<span id="osumat"></span></h2>
         `;
 
         scoreInput.appendChild(results);
@@ -341,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
         yhteisOsumat = 0;
         yhteisPisteet = 0;
         napakympit = 0;
+        osumalista =[]
         
         
         yhteisOsumatEl.textContent = yhteisOsumat;
@@ -380,8 +382,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (value === 'napakymppi') {
                     yhteisPisteet += 10;
                     napakympit++;
+                    osumalista.push('X');
                 } else {
                     yhteisPisteet += parseInt(value, 10);
+                    osumalista.push(value);
                 }
         
                 yhteisOsumat++;
@@ -390,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 yhteisOsumatEl.textContent = yhteisOsumat;
                 yhteisPisteetEl.textContent = yhteisPisteet;
                 napakympitEl.textContent = napakympit;
-
+                osumat.textContent = osumalista.join(' ');
 
                 if(yhteisOsumat === 10){
                     alert('Olet syöttänyt kaikki osumat');
@@ -412,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             
             // lopulliset pisteet
-            paivitaPisteet(db, Number(kilpailijaId), yhteisOsumat, yhteisPisteet, napakympit)
+            paivitaPisteet(db, Number(kilpailijaId), yhteisOsumat, yhteisPisteet, napakympit,osumalista)
                 .then((message) => {
                     alert(message);
                 })
