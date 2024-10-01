@@ -21,7 +21,7 @@ export function paivitaPisteet(db, kilpailijaId, osumat, pisteet, napakympit,osu
             kilpailija.tulokset.osumat = (kilpailija.tulokset.osumat || 0) + osumat;
             kilpailija.tulokset.pisteet = (kilpailija.tulokset.pisteet || 0) + pisteet;
             kilpailija.tulokset.napakympit = (kilpailija.tulokset.napakympit || 0) + napakympit;
-            kilpailija.tulokset.ammuttu = true;
+            kilpailija.ammuttu = true;
             kilpailija.tulokset.osumalista = osumalista;
 
             console.log('pisteet kilpailijalle:', kilpailija);
