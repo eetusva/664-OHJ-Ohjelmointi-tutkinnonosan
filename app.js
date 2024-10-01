@@ -396,14 +396,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 napakympitEl.textContent = napakympit;
                 osumat.textContent = osumalista.join(' ');
 
-                if(yhteisOsumat === 10){
-                    alert('Olet syöttänyt kaikki osumat');
-                    scoreButtons.forEach(button =>{
-                        button.disabled = true;
-                        
-                    })
+               if (yhteisOsumat === 10) {
+                    setTimeout(() => {
+                        alert('Olet syöttänyt kaikki osumat');
+                    }, 100); // TimeOut että näyttö ehtii päivittää osumat
                     
-                   
+                    scoreButtons.forEach(button => {
+                        button.disabled = true;
+                    });
                 }
             });
         });
