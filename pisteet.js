@@ -1,6 +1,6 @@
 
 
-export function paivitaPisteet(db, kilpailijaId, osumat, pisteet, napakympit) {
+export function paivitaPisteet(db, kilpailijaId, osumat, pisteet, napakympit,osumalista) {
     return new Promise((resolve, reject) => {
         
         let transaction = db.transaction(['Kilpailijat'], 'readwrite');
@@ -18,10 +18,11 @@ export function paivitaPisteet(db, kilpailijaId, osumat, pisteet, napakympit) {
             }
             
             // päivitetään pisteet
-            kilpailija.osumat = (kilpailija.osumat || 0) + osumat;
-            kilpailija.pisteet = (kilpailija.pisteet || 0) + pisteet;
-            kilpailija.napakympit = (kilpailija.napakympit || 0) + napakympit;
-            kilpailija.ammuttu = true;
+            kilpailija.tulokset.osumat = (kilpailija.tulokset.osumat || 0) + osumat;
+            kilpailija.tulokset.pisteet = (kilpailija.tulokset.pisteet || 0) + pisteet;
+            kilpailija.tulokset.napakympit = (kilpailija.tulokset.napakympit || 0) + napakympit;
+            kilpailija.tulokset.ammuttu = true;
+            kilpailija.tulokset.osumalista = osumalista;
 
             console.log('pisteet kilpailijalle:', kilpailija);
             
@@ -29,7 +30,7 @@ export function paivitaPisteet(db, kilpailijaId, osumat, pisteet, napakympit) {
             let updateRequest = objectStore.put(kilpailija);
             
             updateRequest.onsuccess = function(event) {
-                resolve(`Kilpailijan ${kilpailija.etunimi} ${kilpailija.sukunimi} pisteet ${pisteet} päivitetty!`);
+                resolve(`Kilpailijan ${kilpailija.etunimi} ${kilpailija.sukunimi} pisteet ${kilpailija.tulokset.pisteet} (${kilpailija.tulokset.osumalista}) päivitetty!`);
             };
             
             updateRequest.onerror = function(event) {
