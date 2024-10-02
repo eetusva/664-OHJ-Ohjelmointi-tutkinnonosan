@@ -295,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <p>Osumien summa: <span id="yhteis_pisteet">0</span></p>
             <p>Napakympit: <span id="napakympit">0</span></p>
             <h2>Syötit osumat:<span id="osumat"></span></h2>
+            <h2><span id="viimeisin_osuma" class ="osumat-animate-grow"></span><h2>
         `;
 
         scoreInput.appendChild(results);
@@ -402,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 yhteisPisteetEl.textContent = yhteisPisteet;
                 napakympitEl.textContent = napakympit;
                 osumat.textContent = osumalista.join(' ');
-
+                animatePoints(viimeisin_osuma); // animoi viimeisimmän pisteen
                if (yhteisOsumat === 10) {
                     setTimeout(() => {
                         alert('Olet syöttänyt kaikki osumat');
@@ -414,7 +415,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         });
-
+        
+function animatePoints(element){
+    element.classList.add('active');
+    setTimeout(()=>{
+        element.classList.remove('active');
+        element.textContent = '';
+    },500);
+}
+        
         addPoints.addEventListener('click', function () {
             if (!kilpailijaId) {
                 alert('Valitse ensin kilpailija!');
