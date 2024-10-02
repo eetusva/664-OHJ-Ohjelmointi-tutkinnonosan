@@ -48,27 +48,18 @@ document.addEventListener('DOMContentLoaded',() => {
     seuraInput.id = 'seura';
     seuraInput.required = true;
 
-    // Radio- ja checkbox-valinnat
+        // Radio- ja checkbox-valinnat
     let radioDiv = document.createElement('div');
     radioDiv.className = 'radiot';
-  
-    let juniorRadio = document.createElement('input');
-    juniorRadio.setAttribute('type', 'radio');
-    juniorRadio.setAttribute('name', 'luokka');
-    juniorRadio.id = 'junior';
-
-    let juniorLabel = document.createElement('label');
-    juniorLabel.setAttribute('for', 'junior');
-    juniorLabel.textContent = 'Junior';
-
+    
     let yleinenRadio = document.createElement('input');
     yleinenRadio.setAttribute('type', 'radio');
     yleinenRadio.setAttribute('name', 'luokka');
     yleinenRadio.id = 'yleinen';
-
+    
     let yleinenLabel = document.createElement('label');
     yleinenLabel.setAttribute('for', 'yleinen');
-    yleinenLabel.textContent = 'Yleinen';
+    yleinenLabel.textContent = 'H';
 
     
     let seniorRadio = document.createElement('input');
@@ -78,27 +69,15 @@ document.addEventListener('DOMContentLoaded',() => {
 
     let seniorLabel = document.createElement('label');
     seniorLabel.setAttribute('for', 'senior');
-    seniorLabel.textContent = 'Senior';
+    seniorLabel.textContent = 'H50';
 
-    
-    let ladyCheckbox = document.createElement('input');
-    ladyCheckbox.setAttribute('type', 'checkbox');
-    ladyCheckbox.setAttribute('name', 'luokka');
-    ladyCheckbox.id = 'lady';
-
-    let ladyLabel = document.createElement('label');
-    ladyLabel.setAttribute('for', 'lady');
-    ladyLabel.textContent = 'Lady';
 
     // Lisää radiot ja checkboxit radioDiviin
-    radioDiv.appendChild(juniorRadio);
-    radioDiv.appendChild(juniorLabel);
+    
     radioDiv.appendChild(yleinenRadio);
     radioDiv.appendChild(yleinenLabel);
     radioDiv.appendChild(seniorRadio);
     radioDiv.appendChild(seniorLabel);
-    radioDiv.appendChild(ladyCheckbox);
-    radioDiv.appendChild(ladyLabel);
 
     // Lähetä-painike
     let submitButton = document.createElement('button');
