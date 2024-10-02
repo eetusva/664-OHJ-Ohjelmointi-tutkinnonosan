@@ -56,3 +56,14 @@ button {
 select{
     font-size: 1em;
 }
+.osumat-animate-grow{
+    display: inline-block;
+    margin-left: 45%;
+    transition: transform 0.5s ease-out;
+    color: #0b9411;
+    
+}
+
+.osumat-animate-grow.active{
+    transform: scale(3);
+}
