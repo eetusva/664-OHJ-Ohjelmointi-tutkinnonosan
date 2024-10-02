@@ -20,4 +20,11 @@ ver.004
   - laskuri
   - pisteiden päivitys
   - pisteiden tallennus
+
+ver. 0.05
+
+- index.html tiedostoon lisätty etusivun rakenne. 
+- etusivu.js: navigaatiopainikkeiden kuuntelijat ja sisällön päivitykset
+- styles_etusivu.css: CSS-tiedosto etusivun tyyleille
+
     
