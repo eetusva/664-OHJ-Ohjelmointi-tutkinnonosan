@@ -311,6 +311,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const yhteisPisteetEl = document.getElementById('yhteis_pisteet');
         const napakympitEl = document.getElementById('napakympit');
         const scoreButtons = document.querySelectorAll('.score-btn');
+        const osumat = document.getElementById('osumat');
+        const viimeisin_osuma = document.getElementById('viimeisin_osuma');
 
         let kilpailijaId = null;
         // Kilpailijan vaihto
