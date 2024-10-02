@@ -441,7 +441,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Valitse ensin kilpailija!');
                 return;
             }
-            
+            if(yhteisOsumat < 10){
+                alert('Kaikki osumat on syötettävä ennen pisteiden lähetystä');
+                return;
+            }
             
             // lopulliset pisteet
             paivitaPisteet(db, Number(kilpailijaId), yhteisOsumat, yhteisPisteet, napakympit,osumalista)
