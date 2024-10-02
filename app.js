@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
                 yhteisOsumat++;
         
-                
+                viimeisin_osuma.textContent = value;
                 yhteisOsumatEl.textContent = yhteisOsumat;
                 yhteisPisteetEl.textContent = yhteisPisteet;
                 napakympitEl.textContent = napakympit;
