@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let value = this.getAttribute('data-value');
         
                
-                if (value === 'napakymppi') {
+                if (value === 'X') {
                     yhteisPisteet += 10;
                     napakympit++;
                     osumalista.push('X');
