@@ -279,13 +279,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const osumaButtons = document.createElement('div');
         osumaButtons.className = 'buttons';
 
-        const buttonValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'napakymppi']; //painikkeiden arvot
+        const buttonValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'X']; //painikkeiden arvot
 
         buttonValues.forEach(value => {
             let btn = document.createElement('button');
             btn.className = 'score-btn';
             btn.setAttribute('data-value', value);
-            btn.textContent = value === 'napakymppi' ? 'X' : value; // painikkeiden tekstit
+            btn.textContent = value; painikkeiden tekstit
             osumaButtons.appendChild(btn);
         });
         osumaButtons.appendChild(removeButton); // Poista viimeisin-painike lisätään
