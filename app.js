@@ -251,6 +251,10 @@ document.addEventListener('DOMContentLoaded', function () {
         addPoints.id = 'lisaa-pisteet';
         addPoints.textContent = 'Lisää pisteet kilpailijalle';
 
+        let removeButton = document.createElement('button'); //tuloksen poisto-painike---
+        removeButton.id = 'remove';
+        removeButton.textContent = '\u232B' ;
+        
         let defaultOption = document.createElement('option');
         defaultOption.textContent = 'Valitse kilpailija';
         defaultOption.disabled = true;
@@ -275,17 +279,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const osumaButtons = document.createElement('div');
         osumaButtons.className = 'buttons';
 
-        const buttonValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'napakymppi']; //painikkeiden arvot
+        const buttonValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'X']; //painikkeiden arvot
 
         buttonValues.forEach(value => {
             let btn = document.createElement('button');
             btn.className = 'score-btn';
             btn.setAttribute('data-value', value);
-            btn.textContent = value === 'napakymppi' ? 'X' : value; // painikkeiden tekstit
+            btn.textContent = value; //painikkeiden tekstit
             osumaButtons.appendChild(btn);
         });
-
-        scoreInput.appendChild(osumaButtons);
+        osumaButtons.appendChild(removeButton); // Poista viimeisin-painike lisätään
+        scoreInput.appendChild(osumaButtons); //kaikki napiut
 
         // Tulokset-elementit
         const results = document.createElement('div');
@@ -389,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let value = this.getAttribute('data-value');
         
                
-                if (value === 'napakymppi') {
+                if (value === 'X') {
                     yhteisPisteet += 10;
                     napakympit++;
                     osumalista.push('X');
@@ -418,14 +422,41 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
         
-function animatePoints(element){
+function animatePoints(element){ //syöttöpisteiden animointi
     element.classList.add('active');
     setTimeout(()=>{
         element.classList.remove('active');
         element.textContent = '';
     },500);
 }
-        
+removeButton.addEventListener('click',() => { // Poisteteaan viimeinen osuma listasta painiketta painettaessa
+    if(osumalista.length === 0){
+        osumat.textContent = 'Osumalista on tyhjä!';
+        return;
+    }
+    let value = osumalista[osumalista.length-1];    
+               
+    if (value === 'X') {
+        yhteisPisteet -= 10;
+        napakympit--;
+        yhteisOsumat -=1;
+        yhteisPisteet - value;
+        osumalista.pop();
+    } else {
+        yhteisPisteet -= parseInt(value, 10);
+        osumalista.pop();
+        yhteisOsumat -=1;
+        yhteisPisteet - value;
+
+    }
+
+    yhteisOsumatEl.textContent = yhteisOsumat;
+    yhteisPisteetEl.textContent = yhteisPisteet;
+    napakympitEl.textContent = napakympit;
+    osumat.textContent = osumalista.join(' ');
+
+});
+  
         addPoints.addEventListener('click', function () {
             if (!kilpailijaId) {
                 alert('Valitse ensin kilpailija!');
