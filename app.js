@@ -288,8 +288,8 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.textContent = value === 'napakymppi' ? 'X' : value; // painikkeiden tekstit
             osumaButtons.appendChild(btn);
         });
-
-        scoreInput.appendChild(osumaButtons);
+        osumaButtons.appendChild(removeButton); // Poista viimeisin-painike lisätään
+        scoreInput.appendChild(osumaButtons); //kaikki napiut
 
         // Tulokset-elementit
         const results = document.createElement('div');
