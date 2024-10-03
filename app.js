@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let btn = document.createElement('button');
             btn.className = 'score-btn';
             btn.setAttribute('data-value', value);
-            btn.textContent = value; painikkeiden tekstit
+            btn.textContent = value; //painikkeiden tekstit
             osumaButtons.appendChild(btn);
         });
         osumaButtons.appendChild(removeButton); // Poista viimeisin-painike lisätään
