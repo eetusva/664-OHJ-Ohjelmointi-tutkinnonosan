@@ -339,13 +339,13 @@ document.addEventListener('DOMContentLoaded', function () {
   //Kilpailijan valinta---
         selectElement.addEventListener('change',async function () {
         kilpailijaId = Number(this.value); // varmistus että kilpailija Id numerona
-        
+        const { puraSalaus } = await import('./aes.js')
         let transaction = db.transaction(['Kilpailijat'], 'readonly');
         let objectStore = transaction.objectStore('Kilpailijat');
         let request = objectStore.get(kilpailijaId);
+
         request.onsuccess = function(event) {
             let valittuKilpailija = request.result; 
-            
             if (!valittuKilpailija) {
                 console.error(`Kilpailijaa ID:llä ${kilpailijaId} ei löytynyt.`);
                 return;
