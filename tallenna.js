@@ -1,9 +1,20 @@
 
-export function tallennaKilpailija(db, uusiKayttaja, tulos_naytto) {
+
+export async function tallennaKilpailija(db, uusiKayttaja, tulos_naytto) {
+    const { luoAvain, salaaData } = await import('./aes.js')
+    
+    const avain = await luoAvain();
+    const uusinKayttaja = await salaaData(uusiKayttaja, avain);
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
     let transaction = db.transaction(['Kilpailijat'], 'readwrite');
-    let objectStore = transaction.objectStore('Kilpailijat');
-    let request = objectStore.add(uusiKayttaja);
+    let objectStore = transaction.objectStore('Kilpailijat');    
+
+    let request = objectStore.add({
+        kilpailija: uusinKayttaja,
+        iv: Array.from(iv),
+        avain: avain
+    });
 
     request.onsuccess = function(event) {
         let kilpailijanID = request.result;
