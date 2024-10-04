@@ -3,6 +3,7 @@ let loginContainer;
 let db;
 import { paivitaPisteet } from './pisteet.js';
 let osumalista = [];
+//--------------------------------------------------------------Kilpailijan lisäys sivu---------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded',() => {
     // kontti
     loginContainer = document.createElement('div');
@@ -232,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto);
     });
 });
-//--- Laskuri-osio--- Tämän voisi laittaa omaan moduuliinsa jossain vaiheessa?
+//---------------------------------------------------------------------- Laskuri-osio--------------------------------------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', function () {
     // Laskuri-painike
@@ -261,6 +262,15 @@ document.addEventListener('DOMContentLoaded', function () {
         let removeButton = document.createElement('button'); //tuloksen poisto-painike---
         removeButton.id = 'remove';
         removeButton.textContent = '\u232B' ;
+        
+              // --- Palaa etusivulle -painike ---
+        let frontpageButton = document.createElement('button');
+        frontpageButton.id = 'frontpagebutton';
+        frontpageButton.textContent = 'Palaa etusivulle';
+        frontpageButton.onclick = () => {
+            window.location.href = 'index.html'
+        };
+        loginContainer.appendChild(frontpageButton); //lisätään etusivupainike
         
         let defaultOption = document.createElement('option');
         defaultOption.textContent = 'Valitse kilpailija';
