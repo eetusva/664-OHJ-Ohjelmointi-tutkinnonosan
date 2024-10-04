@@ -148,15 +148,20 @@ document.addEventListener('DOMContentLoaded',() => {
     searchIdForm.appendChild(searchIdInput);
     searchIdForm.appendChild(searchIdButton);
 
+   
     // --- Palaa etusivulle -painike ---
-    let backButton = document.createElement('button');
-    backButton.textContent = 'Palaa etusivulle';
-
+    let frontpageButton = document.createElement('button');
+    frontpageButton.id = 'frontpagebutton';
+    frontpageButton.textContent = 'Palaa etusivulle';
+    frontpageButton.onclick = () => {
+        window.location.href = 'index.html'
+    };
+    //lisätään formit ja muut
     loginContainer.appendChild(form);
     loginContainer.appendChild(searchForm);
     loginContainer.appendChild(tulos_naytto);
     loginContainer.appendChild(searchIdForm);
-    loginContainer.appendChild(backButton);
+    loginContainer.appendChild(frontpageButton);
     
     //  lisätään koko kontaineri sivulle
     document.body.appendChild(loginContainer);
@@ -406,11 +411,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 yhteisOsumat++;
         
                 viimeisin_osuma.textContent = value;
+                viimeisin_osuma.classList.replace('poisto-animate-grow','osumat-animate-grow'); //luokan vaihto että tämä vihreänä
                 yhteisOsumatEl.textContent = yhteisOsumat;
                 yhteisPisteetEl.textContent = yhteisPisteet;
                 napakympitEl.textContent = napakympit;
                 osumat.textContent = osumalista.join(' ');
-                animatePoints(viimeisin_osuma); // animoi viimeisimmän pisteen
+                animatePoints(viimeisin_osuma); // animoi viimeisimmän lisäyksen
                if (yhteisOsumat === 10) {
                     setTimeout(() => {
                         alert('Olet syöttänyt kaikki osumat');
@@ -450,12 +456,13 @@ removeButton.addEventListener('click',() => { // Poisteteaan viimeinen osuma lis
         yhteisPisteet - value;
 
     }
-
+    viimeisin_osuma.textContent = `-${value}`;
+    viimeisin_osuma.classList.replace('osumat-animate-grow','poisto-animate-grow'); //Tämä punaisena
     yhteisOsumatEl.textContent = yhteisOsumat;
     yhteisPisteetEl.textContent = yhteisPisteet;
     napakympitEl.textContent = napakympit;
     osumat.textContent = osumalista.join(' ');
-
+    animatePoints(viimeisin_osuma);
 });
   
         addPoints.addEventListener('click', function () {
