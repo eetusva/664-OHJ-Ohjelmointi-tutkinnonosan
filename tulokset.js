@@ -1,9 +1,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // HTML-pohja (voisi olla template?)
     let kontti = document.createElement('div')
     kontti.className = 'kontti'
-    
+
+    let etusivuBtn = document.createElement('button');
+    etusivuBtn.textContent = 'Etusivu';
+    kontti.appendChild(etusivuBtn);
+    etusivuBtn.onclick = () => {location.href = 'index.html'}
 
     let poyta = document.createElement('table');
     poyta.className = 'tulokset';
@@ -30,7 +35,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let runko = document.createElement('tbody');
     poyta.appendChild(runko);
-    
+
+    let btnKontti = document.createElement('div');
+    btnKontti.id = 'btnKontti'
+    kontti.appendChild(btnKontti);
+
+    let Kaikki = document.createElement('button');
+    Kaikki.textContent = 'Kaikki';
+    let H = document.createElement('button');
+    H.textContent = 'H';
+    let H50 = document.createElement('button');
+    H50.textContent = 'H50';
+
+    btnKontti.appendChild(Kaikki);
+    btnKontti.appendChild(H)
+    btnKontti.appendChild(H50);    
     
     document.body.appendChild(kontti);   
 
@@ -40,21 +59,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const tableBody = document.querySelector('tbody');
         const rivi = document.createElement('tr');
+        const linkki = document.createElement('a');
+        
         
         const nimisarake = document.createElement('td');
         nimisarake.textContent = nimi;
         
         const osumaSarake = document.createElement('td');
-        osumaSarake.textContent = osumat;
+        osumaSarake.appendChild(linkki);
+        linkki.textContent = osumat;
         
         const tulosSarake = document.createElement('td');
         tulosSarake.textContent = tulos;
         
         rivi.appendChild(nimisarake);
         rivi.appendChild(osumaSarake);
-        rivi.appendChild(tulosSarake);
+        rivi.appendChild(tulosSarake);       
         
         tableBody.appendChild(rivi); //lisätään rivit tbodyyn
+
     }
 
     function haeKilpailijat() {
@@ -74,14 +97,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
                 const kilpailijat = [];
     
-                // Hakee kaikki objektit (arvot) objectStoresta
+                // Hakee kaikkien tiedot objectStoresta
                 const requestAll = objectStore.openCursor();
     
                 requestAll.onsuccess = function(event) {
                     const cursor = event.target.result;
                     if (cursor) {
                         kilpailijat.push(cursor.value); // Lisätään arvot listaan
-                        cursor.continue(); // Siirrytään seuraavaan objektiin
+                        cursor.continue(); // Siirrytään seuraavaan kilpailijaan
                     } else {
                         // Kaikki tiedot on haettu, palautetaan arvot
                         resolve(kilpailijat);
@@ -96,10 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Esimerkki: kutsu ja käyttö
+    // hae lista ja sorttaus
     haeKilpailijat().then((kilpailijat) => {
+        kilpailijat.sort((a, b) => {
+            if (a.tulokset.pisteet < b.tulokset.pisteet) return 1;
+            if (a.tulokset.pisteet > b.tulokset.pisteet) return -1;
+            return 0;
+        })
         kilpailijat.forEach(item => {
-            lisaaRivi(item.etunimi+' '+item.sukunimi, item.seura, item.luokka)
+            lisaaRivi(item.etunimi+' '+item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet)
         })
         console.log('Kilpailijat:', kilpailijat);
     }).catch((error) => {

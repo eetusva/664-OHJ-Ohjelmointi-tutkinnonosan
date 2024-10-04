@@ -190,9 +190,9 @@ if (!window.indexedDB) {
   
   
   
-  // testifunktiot
+  /* testifunktiot
   (async () => {
-    kilpailija = ['Late', 'Liukas', '[X,X,10,10,9,9,9,9,8,6]', 90].join(' ');
+    let kilpailija = ['Late', 'Liukas', '[X,X,10,10,9,9,9,9,8,6]', 90].join(' ');
     // Tallennus
     await salattuDataTallennus(kilpailija);
   
@@ -200,6 +200,24 @@ if (!window.indexedDB) {
     setTimeout(async () => {
       await salatunDatanHaku(1);  // ID-haku
     }, 2000);
-  })();
+  })(); 
+  
+  export async function haeAvain(db, avain) {
+    let transaction = db.transaction(['Avaimet'], 'readonly');
+    let objectStore = transaction.objectStore('Avaimet');
+    
+    let request = objectStore.get(avain);
+
+    request.onsuccess = function(event) {
+        let avain = request.result;
+        return avain
+    }
+
+    request.onerror = function(event) {
+        console.error('Avaimen haku epäonnistui', event);
+    };    
+}
+  
+  */
   
   

@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
 
+
         // tallennusfunktio 
         const { tallennaKilpailija } = await import('./tallenna.js');
         let tulos_naytto = document.getElementById('search-result');
@@ -239,7 +240,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const { haeKaikkiKilpailijat } = await import('./haku.js'); // Tuo hakufunktio
         let kilpailijat = await haeKaikkiKilpailijat(db); 
-        
+
+        // Vrt. haku.js! Tähänkö salauksenpurkufunktio (iteritavalle listalle)???        
         
         let scoreInput = document.createElement('div');
         scoreInput.className = 'score-input';
@@ -339,7 +341,6 @@ document.addEventListener('DOMContentLoaded', function () {
   //Kilpailijan valinta---
         selectElement.addEventListener('change',async function () {
         kilpailijaId = Number(this.value); // varmistus että kilpailija Id numerona
-        const { puraSalaus } = await import('./aes.js')
         let transaction = db.transaction(['Kilpailijat'], 'readonly');
         let objectStore = transaction.objectStore('Kilpailijat');
         let request = objectStore.get(kilpailijaId);

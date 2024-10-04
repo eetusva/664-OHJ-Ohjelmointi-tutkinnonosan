@@ -2,7 +2,6 @@
 
 export function paivitaPisteet(db, kilpailijaId, osumat, pisteet, napakympit,osumalista) {
     return new Promise(async (resolve, reject) => {
-        const { puraSalaus } = await import('./aes.js');
         let transaction = db.transaction(['Kilpailijat'], 'readwrite');
         let objectStore = transaction.objectStore('Kilpailijat');
         

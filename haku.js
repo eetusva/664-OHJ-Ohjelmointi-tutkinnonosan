@@ -1,6 +1,8 @@
 export function haeKilpailija(db, etunimi, sukunimi, tulos_naytto) {
     let transaction = db.transaction(['Kilpailijat'], 'readonly');
     let objectStore = transaction.objectStore('Kilpailijat');
+
+    // Tähän salauksenpurkufunktio (iteroitavalle listalle)
     
     let found = false;
     objectStore.openCursor().onsuccess = function(event) {
@@ -58,6 +60,8 @@ export function haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto) {
     let objectStore = transaction.objectStore('Kilpailijat');
     
     let request = objectStore.get(kilpailijaId);
+
+    // Tähän salauksenpurkufunktio (ID)
     
     request.onsuccess = function(event) {
         let kilpailija = request.result;
@@ -79,21 +83,6 @@ export function haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto) {
     };
 }
 
-export async function haeAvain(db, avain) {
-    let transaction = db.transaction(['Avaimet'], 'readonly');
-    let objectStore = transaction.objectStore('Avaimet');
-    
-    let request = objectStore.get(avain);
-
-    request.onsuccess = function(event) {
-        let avain = request.result;
-        return avain
-    }
-
-    request.onerror = function(event) {
-        console.error('Avaimen haku epäonnistui', event);
-    };    
-}
 export function haeKaikkiKilpailijat(db) {
     return new Promise((resolve, reject) => {
         let transaction = db.transaction(['Kilpailijat'], 'readonly');
@@ -101,6 +90,9 @@ export function haeKaikkiKilpailijat(db) {
         let request = objectStore.getAll();
 
         request.onsuccess = function(event) {
+
+            // Tähänkö salauksenpurkufunktio (iteroitavalle listalle)????
+
             resolve(request.result);  // Palauttaa listan kilpailijoista
         };
 

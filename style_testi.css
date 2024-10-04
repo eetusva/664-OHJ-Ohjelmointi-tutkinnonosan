@@ -1,3 +1,8 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: 'Classica', sans-serif;
@@ -66,4 +71,58 @@ select{
 
 .osumat-animate-grow.active{
     transform: scale(3);
+}
+
+.kontti {
+    display: flexbox;
+    width: 97vw;
+    height: 97vh;
+    margin: 0 auto;
+    background-image: url('bck-grnd2.png');
+    background-size: cover;
+}
+
+table {
+    padding: 1vh 1vw;
+    width: 95vw;
+    text-align: center;
+    font-weight: 600;
+    background-color: lightblue;
+}
+
+table tr {
+    width: 100%;
+}
+
+tr:nth-child(even) {
+    background-color: aliceblue;
+}
+
+thead>tr {
+    margin-top: 35%;
+    min-height: 10vh;
+    font-size: x-large;
+    background-color: darkslateblue;
+    color: antiquewhite;
+}
+
+#info {
+    text-decoration: none;
+    background-color: blue;
+    color: white;
+    border-radius: 50%;
+}
+
+#btnKontti {
+    width: 100vw;
+    position: fixed;
+    display: flex;
+    left: 0;
+    bottom: 1vh;
+    background-color: rgba(7, 66, 38, 0.7);
+    justify-content: space-evenly;
+}
+
+#btnKontti button {
+    width: 20vw;
 }
