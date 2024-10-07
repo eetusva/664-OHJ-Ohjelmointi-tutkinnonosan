@@ -1,10 +1,10 @@
 
 // Tarkistetaan IndexedDB-tuki
 if (!window.indexedDB) {
-    console.error("Selaimesi ei tue IndexedDB:tä.");
-  } else {
-    console.log("IndexedDB-tuki löytyy.");
-  }
+      console.error("Selaimesi ei tue IndexedDB:tä.");
+    } else {
+      console.log("IndexedDB-tuki löytyy.");
+}
   
   // IV (initialization vector)
   let iv = window.crypto.getRandomValues(new Uint8Array(12));  // Satunnainen IV, salaus/purku
@@ -74,7 +74,7 @@ if (!window.indexedDB) {
   }
   
   // Salattu tieto => IndexedDB:hen
-  async function salattuDataTallennus(kilpailijaTiedot) {  //export
+  async function salattuDataTallennus(kilpailijaTiedot) {  //export tai korvaamaan tallennaKilpailija()
     try {
       // Tietokanta auki
       const db = await avaaTietokanta();
@@ -113,7 +113,7 @@ if (!window.indexedDB) {
   }
   
   // Haku IndexedDB:stä ja purkaminen
-  async function salatunDatanHaku(id) {  //export
+  async function salatunDatanHaku(id) {  //export tai korvaamaan haeKilpailija()
     try {
       // Tietokanta auki
       const db = await avaaTietokanta();
@@ -188,20 +188,83 @@ if (!window.indexedDB) {
     }
   }
   
+// Iteroidaan tietueet ja puretaan salaus
+async function puraKaikkiTiedot() {
+  try {
+    // Tietokanta auki
+    const db = await avaaTietokanta();
+
+    // Tietueitten haku (sync)
+    const transaction = db.transaction(['Kilpailijat'], 'readonly');
+    const objectStore = transaction.objectStore('Kilpailijat');
+    const request = objectStore.openCursor();
+    const haettuTieto = [];
+
+    request.onsuccess = (event) => {
+      const cursor = event.target.result;
+      if (cursor) {
+        const data = cursor.value;
+        haettuTieto.push(data); // Tallennetaan tulokset listaan
+        cursor.continue();
+      } else {
+        console.log('Kaikki tietueet haettu.');
+        // Tietojen purku  (async)
+        puraTiedot(haettuTieto);
+      }
+    };
+
+    request.onerror = (event) => {
+      console.error('Iterointi epäonnistui: ', event.target.errorCode);
+    };
+  } catch (error) {
+    console.error('Virhe purkamisessa: ', error);
+  }
+}
+
+// Tietojen purku
+async function puraTiedot(haettuTieto) {
+    console.log(haettuTieto)
+    for (const data of haettuTieto) {
+        //console.log(data)
+        // Avain ja IV jokaiselle tietueelle
+        const tuotuAvain = await importAvain(data.key);
+        const ivArray = new Uint8Array(data.iv);  // Muutetaan takaisin Uint8Arrayksi
+        iv = ivArray;  // Asetetaan IV purkamista varten
+
+        // Purku: kilpailija
+        const purettuKilpailija = await puraSalattuData(data.kilpailija, tuotuAvain);
+
+        console.log(`ID: ${data.id} | Purettu nimi: ${purettuKilpailija.etunimi} | Purettu osumat: ${purettuKilpailija.tulokset.osumalista}`);
+    }
+}
+
   
   
   /* testifunktiot
-  (async () => {
-    let kilpailija = ['Late', 'Liukas', '[X,X,10,10,9,9,9,9,8,6]', 90].join(' ');
-    // Tallennus
-    await salattuDataTallennus(kilpailija);
+
+  kilpailijat = {
+    ['Late', 'Liukas', '[X,X,X,10,10,9,9,9,8,6]', 91]
+    ['Nils-Aslak', 'Valkeapää', '[10,9,9,9,9,9,8,8,8,7]', 86]
+}
+
+(async () => {
+  // Tallennetaan esimerkkitiedot
+  await salattuDataTallennus(kilpailijat[0]);
+
+  // Toimitus
+  setTimeout(async () => {
+    await puraKaikkiTiedot();  // Puretaan kaikki tietokannan tiedot
+  }, 2000);  // Viive
+})(); 
   
-    // timeout, koska tallennusviive
-    setTimeout(async () => {
-      await salatunDatanHaku(1);  // ID-haku
-    }, 2000);
-  })(); 
+
+
+
+
+
   
+
+
   export async function haeAvain(db, avain) {
     let transaction = db.transaction(['Avaimet'], 'readonly');
     let objectStore = transaction.objectStore('Avaimet');
@@ -217,7 +280,7 @@ if (!window.indexedDB) {
         console.error('Avaimen haku epäonnistui', event);
     };    
 }
-  
+
   */
   
   

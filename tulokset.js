@@ -1,7 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // HTML-pohja (voisi olla template?)
     let kontti = document.createElement('div')
     kontti.className = 'kontti'
 
@@ -16,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let otsikot = document.createElement('thead');
     poyta.appendChild(otsikot);
-    otsikot.style.backgroundColor = 'cyan';
 
     let otsikko = document.createElement('tr');
     otsikot.appendChild(otsikko);
@@ -49,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnKontti.appendChild(Kaikki);
     btnKontti.appendChild(H)
-    btnKontti.appendChild(H50);    
+    btnKontti.appendChild(H50);
     
     document.body.appendChild(kontti);   
 
@@ -118,20 +116,41 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         });
     }
-    
+
     // hae lista ja sorttaus
-    haeKilpailijat().then((kilpailijat) => {
-        kilpailijat.sort((a, b) => {
-            if (a.tulokset.pisteet < b.tulokset.pisteet) return 1;
-            if (a.tulokset.pisteet > b.tulokset.pisteet) return -1;
-            return 0;
-        })
-        kilpailijat.forEach(item => {
+    haeKilpailijat(sarja).then((kilpailijat) => {
+        const sarjaKilpailijat = sarjoittain(kilpailijat, sarja)
+        //kilpailijat.sort((a, b) => b.tulokset.pisteet - a.tulokset.pisteet)
+        sarjaKilpailijat.forEach(item => {
             lisaaRivi(item.etunimi+' '+item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet)
         })
         console.log('Kilpailijat:', kilpailijat);
     }).catch((error) => {
         console.error(error);
-    });    
+    });
+})
 
+let sarja = '';
+
+// Suodatin sarjan mukaan
+function sarjoittain(kilpailijat, sarja) {
+    if (sarja === '') {
+        return kilpailijat
+        .sort((a, b) => b.tulokset.pisteet - a.tulokset.pisteet);
+    } else if (sarja === 'yleinen' || 'senior') {
+    return kilpailijat
+        .filter(kilpailijat => kilpailijat.luokka === sarja)
+        .sort((a, b) => b.tulokset.pisteet - a.tulokset.pisteet);
+    }
+}
+
+
+/* Osallistujat sarjasta 'H'
+const sarja = 'H';
+const sarjaKilpailijat = sarjoittain(kilpailijat, sarja);
+
+// Tulosta tulokset
+sarjaKilpailijat.forEach(kilpailijat => {
+    console.log(`Nimi: ${kilpailijat.name}, Osumat: ${kilpailijat.hits}, Tulos: ${kilpailijat.result}, Sarja: ${kilpailijat.series}`);
 });
+*/
