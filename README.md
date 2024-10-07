@@ -27,4 +27,9 @@ ver. 0.05
 - etusivu.js: navigaatiopainikkeiden kuuntelijat ja sisällön päivitykset
 - styles_etusivu.css: CSS-tiedosto etusivun tyyleille
 
-    
+ver. 0.06  
+
+- Tulossivun muotoilut
+- aes.js päivitysversio
+- Kommentteihin salaus- ja purkufunktioiden suunnitellut paikat
+- Luovuttu SHA-256 hajautuksesta

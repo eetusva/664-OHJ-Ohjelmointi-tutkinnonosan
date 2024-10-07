@@ -3,6 +3,7 @@ let loginContainer;
 let db;
 import { paivitaPisteet } from './pisteet.js';
 let osumalista = [];
+//--------------------------------------------------------------Kilpailijan lisäys sivu---------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded',() => {
     // kontti
     loginContainer = document.createElement('div');
@@ -148,15 +149,20 @@ document.addEventListener('DOMContentLoaded',() => {
     searchIdForm.appendChild(searchIdInput);
     searchIdForm.appendChild(searchIdButton);
 
+   
     // --- Palaa etusivulle -painike ---
-    let backButton = document.createElement('button');
-    backButton.textContent = 'Palaa etusivulle';
-
+    let frontpageButton = document.createElement('button');
+    frontpageButton.id = 'frontpagebutton';
+    frontpageButton.textContent = 'Palaa etusivulle';
+    frontpageButton.onclick = () => {
+        window.location.href = 'index.html'
+    };
+    //lisätään formit ja muut
     loginContainer.appendChild(form);
     loginContainer.appendChild(searchForm);
     loginContainer.appendChild(tulos_naytto);
     loginContainer.appendChild(searchIdForm);
-    loginContainer.appendChild(backButton);
+    loginContainer.appendChild(frontpageButton);
     
     //  lisätään koko kontaineri sivulle
     document.body.appendChild(loginContainer);
@@ -227,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto);
     });
 });
-//--- Laskuri-osio--- Tämän voisi laittaa omaan moduuliinsa jossain vaiheessa?
+//---------------------------------------------------------------------- Laskuri-osio--------------------------------------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', function () {
     // Laskuri-painike
@@ -256,6 +262,15 @@ document.addEventListener('DOMContentLoaded', function () {
         let removeButton = document.createElement('button'); //tuloksen poisto-painike---
         removeButton.id = 'remove';
         removeButton.textContent = '\u232B' ;
+        
+              // --- Palaa etusivulle -painike ---
+        let frontpageButton = document.createElement('button');
+        frontpageButton.id = 'frontpagebutton';
+        frontpageButton.textContent = 'Palaa etusivulle';
+        frontpageButton.onclick = () => {
+            window.location.href = 'index.html'
+        };
+        loginContainer.appendChild(frontpageButton); //lisätään etusivupainike
         
         let defaultOption = document.createElement('option');
         defaultOption.textContent = 'Valitse kilpailija';
@@ -406,11 +421,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 yhteisOsumat++;
         
                 viimeisin_osuma.textContent = value;
+                viimeisin_osuma.classList.replace('poisto-animate-grow','osumat-animate-grow'); //luokan vaihto että tämä vihreänä
                 yhteisOsumatEl.textContent = yhteisOsumat;
                 yhteisPisteetEl.textContent = yhteisPisteet;
                 napakympitEl.textContent = napakympit;
                 osumat.textContent = osumalista.join(' ');
-                animatePoints(viimeisin_osuma); // animoi viimeisimmän pisteen
+                animatePoints(viimeisin_osuma); // animoi viimeisimmän lisäyksen
                if (yhteisOsumat === 10) {
                     setTimeout(() => {
                         alert('Olet syöttänyt kaikki osumat');
@@ -450,12 +466,13 @@ removeButton.addEventListener('click',() => { // Poisteteaan viimeinen osuma lis
         yhteisPisteet - value;
 
     }
-
+    viimeisin_osuma.textContent = `-${value}`;
+    viimeisin_osuma.classList.replace('osumat-animate-grow','poisto-animate-grow'); //Tämä punaisena
     yhteisOsumatEl.textContent = yhteisOsumat;
     yhteisPisteetEl.textContent = yhteisPisteet;
     napakympitEl.textContent = napakympit;
     osumat.textContent = osumalista.join(' ');
-
+    animatePoints(viimeisin_osuma);
 });
   
         addPoints.addEventListener('click', function () {
