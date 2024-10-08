@@ -262,6 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let removeButton = document.createElement('button'); //tuloksen poisto-painike---
         removeButton.id = 'remove';
         removeButton.textContent = '\u232B' ;
+        let removeButton_ispressed = false;
         
               // --- Palaa etusivulle -painike ---
         let frontpageButton = document.createElement('button');
