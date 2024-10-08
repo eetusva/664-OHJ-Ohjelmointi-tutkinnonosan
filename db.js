@@ -19,6 +19,10 @@ export function avaaTietokanta() {
             if (!db.objectStoreNames.contains('Kilpailijat')) {
                 db.createObjectStore('Kilpailijat', { keyPath: 'id', autoIncrement: true });
             }
+
+            if (!db.objectStoreNames.contains('SalaKilpailijat')) {
+                db.createObjectStore('SalaKilpailijat', { keyPath: 'id', autoIncrement: true });
+            }
         };
 
         // Kun tietokanta on avattu onnistuneesti

@@ -1,16 +1,9 @@
-
-// Tarkistetaan IndexedDB-tuki
-if (!window.indexedDB) {
-      console.error("Selaimesi ei tue IndexedDB:tä.");
-    } else {
-      console.log("IndexedDB-tuki löytyy.");
-}
   
   // IV (initialization vector)
   let iv = window.crypto.getRandomValues(new Uint8Array(12));  // Satunnainen IV, salaus/purku
   
   // Avain salaukseen ja purkamiseen
-  async function luoAvain() {
+  export async function luoAvain() {
     return await crypto.subtle.generateKey(
       {name: "AES-GCM", length: 256}, true, ["encrypt", "decrypt"]); // 'salaus' ja 'purku', exportattava avvain
   }
@@ -55,8 +48,8 @@ if (!window.indexedDB) {
       // Tietokannan päivitys (objectStore luonti, jos ei jo ole)
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
-        if (!db.objectStoreNames.contains('Kilpailijat')) {
-          db.createObjectStore('Kilpailijat', { keyPath: 'id', autoIncrement: true });
+        if (!db.objectStoreNames.contains('SalaKilpailijat')) {
+          db.createObjectStore('Salailpailijat', { keyPath: 'id', autoIncrement: true });
         }
         console.log('Tietokannan päivitys tehty (objectStore luotu).');
       };
@@ -74,10 +67,10 @@ if (!window.indexedDB) {
   }
   
   // Salattu tieto => IndexedDB:hen
-  async function salattuDataTallennus(kilpailijaTiedot) {  //export tai korvaamaan tallennaKilpailija()
+  export async function salattuDataTallennus(kilpailijaTiedot) {  //export tai korvaamaan tallennaKilpailija()
     try {
       // Tietokanta auki
-      const db = await avaaTietokanta();
+      const db = await avaaTietokanta(); // Turha, jos attr sisältää db:n
   
       // Avvaimen luonti
       const key = await luoAvain();
@@ -91,13 +84,12 @@ if (!window.indexedDB) {
       const exportedKey = await exportAvain(key);
   
       // Tallennus IndexedDB:hen
-      const transaction = db.transaction(['Kilpailijat'], 'readwrite');
-      const objectStore = transaction.objectStore('Kilpailijat');
+      const transaction = db.transaction(['SalaKilpailijat'], 'readwrite');
+      const objectStore = transaction.objectStore('SalaKilpailijat');
       
       const request = objectStore.add({
         kilpailija: salattuKilpailija,
         iv: Array.from(iv),  // IV taulukoksi tallennettavaksi
-        key: exportedKey  // Avvaimen tallennus JSON-muodossa
       });
   
       request.onsuccess = () => {
@@ -116,7 +108,7 @@ if (!window.indexedDB) {
   async function salatunDatanHaku(id) {  //export tai korvaamaan haeKilpailija()
     try {
       // Tietokanta auki
-      const db = await avaaTietokanta();
+      const db = await avaaTietokanta(); //Tämäkin turha
   
       // Tietojen haku objectStoresta
       const transaction = db.transaction(['Kilpailijat'], 'readonly');
@@ -149,7 +141,7 @@ if (!window.indexedDB) {
     }
   }
   
-  async function tallennaAvain(kilpailijaId) {
+  async function tallennaAvain(kilpailijaId) { // Parempi löytyy haku.js
     const db = await avaaTietokanta();
   
     const transaction = db.transaction(['Avaimet'], 'readwrite');

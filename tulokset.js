@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     kontti.appendChild(etusivuBtn);
     etusivuBtn.onclick = () => {location.href = 'index.html'}
 
+    let kilpailuTiedot = document.createElement('div');
+    kontti.appendChild(kilpailuTiedot);
+    kilpailuTiedot.textContent = 'Kilpailun tiedot';
+
     let poyta = document.createElement('table');
     poyta.className = 'tulokset';
     kontti.appendChild(poyta);
@@ -32,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     otsikko.appendChild(tulosOtsikko);
     
     let runko = document.createElement('tbody');
+    runko.id = 'runko';
     poyta.appendChild(runko);
 
     let btnKontti = document.createElement('div');
@@ -45,6 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let H50 = document.createElement('button');
     H50.textContent = 'H50';
 
+    Kaikki.onclick = () => haeSarjoittain('all');
+    H.onclick = () => haeSarjoittain('yleinen');
+    H50.onclick = () => haeSarjoittain('senior');
+
     btnKontti.appendChild(Kaikki);
     btnKontti.appendChild(H)
     btnKontti.appendChild(H50);
@@ -57,8 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const tableBody = document.querySelector('tbody');
         const rivi = document.createElement('tr');
-        const linkki = document.createElement('a');
-        
+        const linkki = document.createElement('a');      
         
         const nimisarake = document.createElement('td');
         nimisarake.textContent = nimi;
@@ -75,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
         rivi.appendChild(tulosSarake);       
         
         tableBody.appendChild(rivi); //lisätään rivit tbodyyn
-
     }
 
     function haeKilpailijat() {
@@ -94,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const objectStore = transaction.objectStore('Kilpailijat');
     
                 const kilpailijat = [];
+                
     
                 // Hakee kaikkien tiedot objectStoresta
                 const requestAll = objectStore.openCursor();
@@ -118,39 +126,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // hae lista ja sorttaus
-    haeKilpailijat(sarja).then((kilpailijat) => {
-        const sarjaKilpailijat = sarjoittain(kilpailijat, sarja)
-        //kilpailijat.sort((a, b) => b.tulokset.pisteet - a.tulokset.pisteet)
-        sarjaKilpailijat.forEach(item => {
-            lisaaRivi(item.etunimi+' '+item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet)
-        })
-        console.log('Kilpailijat:', kilpailijat);
-    }).catch((error) => {
-        console.error(error);
-    });
-})
-
-let sarja = '';
-
-// Suodatin sarjan mukaan
-function sarjoittain(kilpailijat, sarja) {
-    if (sarja === '') {
-        return kilpailijat
-        .sort((a, b) => b.tulokset.pisteet - a.tulokset.pisteet);
-    } else if (sarja === 'yleinen' || 'senior') {
-    return kilpailijat
-        .filter(kilpailijat => kilpailijat.luokka === sarja)
-        .sort((a, b) => b.tulokset.pisteet - a.tulokset.pisteet);
+    // Funktio, joka hakee ja sorttaa kilpailijat sarjan mukaan
+    function haeSarjoittain(sarja) {
+        document.getElementById('runko').innerHTML = '';
+        // Hakee lista ja sorttaa
+        haeKilpailijat().then((kilpailijat) => {
+            const sarjaKilpailijat = sarjoittain(kilpailijat, sarja);
+            sarjaKilpailijat.forEach(item => {
+                lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet);
+            });
+            console.log('Kilpailijat:', kilpailijat);
+        }).catch((error) => {
+            console.error(error);
+        });
     }
-}
-
-
-/* Osallistujat sarjasta 'H'
-const sarja = 'H';
-const sarjaKilpailijat = sarjoittain(kilpailijat, sarja);
-
-// Tulosta tulokset
-sarjaKilpailijat.forEach(kilpailijat => {
-    console.log(`Nimi: ${kilpailijat.name}, Osumat: ${kilpailijat.hits}, Tulos: ${kilpailijat.result}, Sarja: ${kilpailijat.series}`);
+    
+    // Suodatin sarjan mukaan
+    function sarjoittain(kilpailijat, sarja) {
+        if (sarja === 'all') {
+            return kilpailijat.sort((a, b) => b.tulokset.pisteet - a.tulokset.pisteet);
+        } else if (sarja === 'yleinen' || sarja === 'senior') {  // Korjattu vertailu
+            return kilpailijat
+                .filter(kilpailija => kilpailija.luokka === sarja) // Suodatetaan kilpailijat sarjan mukaan
+                .sort((a, b) => b.tulokset.pisteet - a.tulokset.pisteet);
+        } else {
+            return [];
+        }
+    }
+haeSarjoittain('all')
 });
-*/

@@ -2,11 +2,13 @@
 
 export async function tallennaKilpailija(db, uusiKayttaja, tulos_naytto) {
 
+    const { luoAvain, salattuDataTallennus } = await import('./aes.js');
+    const avain = await luoAvain();
+    tallennaAvain(db, avain);
+    salattuDataTallennus(uusiKayttaja);
+
     let transaction = db.transaction(['Kilpailijat'], 'readwrite');
     let objectStore = transaction.objectStore('Kilpailijat');
-
-    // Tähän salausfunktio
-
     let request = objectStore.add(uusiKayttaja,);
 
     request.onsuccess = function(event) {
