@@ -427,14 +427,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 napakympitEl.textContent = napakympit;
                 osumat.textContent = osumalista.join(' ');
                 animatePoints(viimeisin_osuma); // animoi viimeisimmän lisäyksen
-               if (yhteisOsumat === 10) {
+                removeButton_ispressed = false;
+                if (yhteisOsumat >= 10 && !removeButton_ispressed) { // Tämä estää näppäilemästä liikaa osumia mutta antaa myös korjata
                     setTimeout(() => {
-                        alert('Olet syöttänyt kaikki osumat');
-                    }, 100); // TimeOut että näyttö ehtii päivittää osumat
-                    
+                        alert('Olet syöttänyt vaadittavan laukausmäärän!');
+                    }, 100);                  
                     scoreButtons.forEach(button => {
                         button.disabled = true;
-                    });
+                    });   
                 }
             });
         });
@@ -473,28 +473,38 @@ removeButton.addEventListener('click',() => { // Poisteteaan viimeinen osuma lis
     napakympitEl.textContent = napakympit;
     osumat.textContent = osumalista.join(' ');
     animatePoints(viimeisin_osuma);
+    removeButton_ispressed = true; // Onko korjattu osumia
+    scoreButtons.forEach(button => {
+        button.disabled = false;
+    });
 });
   
-        addPoints.addEventListener('click', function () {
-            if (!kilpailijaId) {
-                alert('Valitse ensin kilpailija!');
-                return;
-            }
-            if(yhteisOsumat < 10){
-                alert('Kaikki osumat on syötettävä ennen pisteiden lähetystä');
-                return;
-            }
-            
-            // lopulliset pisteet
-            paivitaPisteet(db, Number(kilpailijaId), yhteisOsumat, yhteisPisteet, napakympit,osumalista)
-                .then((message) => {
-                    alert(message);
-                })
-                .catch(error => {
-                    console.error('Pisteiden päivityksessä tapahtui jokin virhe:', error);
-                });
-            addPoints.disabled = true;
+//Pisteiden lähetys
+addPoints.addEventListener('click', function () {
+    if (!kilpailijaId) {
+        alert('Valitse ensin kilpailija!');
+        return;
+    }
+    if(yhteisOsumat < 10){
+        alert('Kaikki osumat on syötettävä ennen pisteiden lähetystä');
+        return;
+    }
+
+    let confirmed = 'Haluatko varmasti lähettää osumat?';
+    if (confirm(confirmed)){
+        // Palauttaa lopulliset pisteet
+        paivitaPisteet(db, Number(kilpailijaId), yhteisOsumat, yhteisPisteet, napakympit,osumalista)
+        .then((message) => { 
+            alert(message);
+        })
+        .catch(error => {   //
+             console.error('Pisteiden päivityksessä tapahtui jokin virhe:', error);
         });
-        
+        addPoints.disabled = true;
+
+        } else {
+            return;
+        }
+        });    
     });
 });
