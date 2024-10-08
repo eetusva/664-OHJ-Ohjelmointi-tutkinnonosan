@@ -491,7 +491,7 @@ addPoints.addEventListener('click', function () {
         return;
     }
 
-    let confirmed = 'Haluatko varmasti lähettää osumat?';
+    let confirmed = 'Tarkista osumat ja lähetä painamalla OK!';
     if (confirm(confirmed)){
         // Palauttaa lopulliset pisteet
         paivitaPisteet(db, Number(kilpailijaId), yhteisOsumat, yhteisPisteet, napakympit,osumalista)
