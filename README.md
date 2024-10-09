@@ -33,3 +33,9 @@ ver. 0.06
 - aes.js päivitysversio
 - Kommentteihin salaus- ja purkufunktioiden suunnitellut paikat
 - Luovuttu SHA-256 hajautuksesta
+
+ver. 0.07  
+
+- salatulle datalle oma objectStore
+- Avaimen tallennus Avain-objectStoreen
+- Tulossivun muokkaus
