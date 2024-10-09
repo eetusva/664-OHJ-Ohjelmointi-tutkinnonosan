@@ -1,4 +1,5 @@
 
+
 document.addEventListener('DOMContentLoaded', () => {
 
     let kontti = document.createElement('div')
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nimiOtsikko.textContent = 'Nimi';
     osumaOtsikko.textContent = 'Osumat';
-    tulosOtsikko.textContent = 'Tulos'
+    tulosOtsikko.textContent = 'Yht.'
 
     otsikko.appendChild(nimiOtsikko);
     otsikko.appendChild(osumaOtsikko);
@@ -58,22 +59,50 @@ document.addEventListener('DOMContentLoaded', () => {
     btnKontti.appendChild(H)
     btnKontti.appendChild(H50);
     
-    document.body.appendChild(kontti);   
+    document.body.appendChild(kontti);
+
+    // Modaali
+    let modaali = document.createElement('div');
+    modaali.id = 'modaali';
+    modaali.className = 'modaali';
+
+    let sulje = document.createElement('span');
+    sulje.id = 'suljeModaali';
+    sulje.className = 'sulje';
+    sulje.textContent = 'X';
+    modaali.appendChild(sulje);
+
+    let modaaliSisalto = document.createElement('div');
+    modaaliSisalto.className = 'ModaaliSisalto';
+    modaali.appendChild(modaaliSisalto);    
+
+    let kilpailijaKortti = document.createElement('pre');
+    kilpailijaKortti.id = 'korttiSisalto';
+
+    let poisto = document.createElement('button');
+    poisto.id = 'rivinPoisto';
+    poisto.textContent = 'Poista kilpailija';
+    poisto.style.backgroundColor = 'orange';
+    poisto.style.color = 'black';
+
+    
+    modaaliSisalto.appendChild(kilpailijaKortti);
+    modaaliSisalto.appendChild(poisto);
+
+    document.body.appendChild(modaali);
 
 
     // rivinlisäysfunktio
     function lisaaRivi(nimi, osumat, tulos) {
 
         const tableBody = document.querySelector('tbody');
-        const rivi = document.createElement('tr');
-        const linkki = document.createElement('a');      
+        const rivi = document.createElement('tr');   
         
         const nimisarake = document.createElement('td');
         nimisarake.textContent = nimi;
         
         const osumaSarake = document.createElement('td');
-        osumaSarake.appendChild(linkki);
-        linkki.textContent = osumat;
+        osumaSarake.textContent = osumat;
         
         const tulosSarake = document.createElement('td');
         tulosSarake.textContent = tulos;
@@ -86,7 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function haeKilpailijat() {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
+
+            //const {salatunDatanHaku } = await import('./aes.js');
+            //let salainen = salatunDatanHaku(1);
+            //console.log(salainen)
+
             // Avataan tietokanta
             const request = indexedDB.open('Kilpailijatietokanta', 1);
     
@@ -125,22 +159,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // hae lista ja sorttaus
-    // Funktio, joka hakee ja sorttaa kilpailijat sarjan mukaan
+    // Haku- ja sorttaus kilpailijat sarjan mukaan
     function haeSarjoittain(sarja) {
         document.getElementById('runko').innerHTML = '';
         // Hakee lista ja sorttaa
         haeKilpailijat().then((kilpailijat) => {
             const sarjaKilpailijat = sarjoittain(kilpailijat, sarja);
             sarjaKilpailijat.forEach(item => {
-                lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet);
+                lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet, item.seura);
             });
-            console.log('Kilpailijat:', kilpailijat);
+            //console.log('Kilpailijat:', kilpailijat);
         }).catch((error) => {
             console.error(error);
         });
     }
-    
+
     // Suodatin sarjan mukaan
     function sarjoittain(kilpailijat, sarja) {
         if (sarja === 'all') {
@@ -153,5 +186,49 @@ document.addEventListener('DOMContentLoaded', () => {
             return [];
         }
     }
-haeSarjoittain('all')
-});
+
+    haeSarjoittain('all');
+
+
+    //Modaali    
+    const modal = document.getElementById('modaali'); //modal, ettei sekoitu elementtin nimeen
+    const modaalinSisalto = document.getElementById('korttiSisalto');
+    const modaalinSulkuBtn = document.getElementById('suljeModaali');
+    const rivinPoistoBtn = document.getElementById('rivinPoisto');
+    let valittuRivi = null;
+
+    // Delegoitu kuuntelija parentille, koska rivikuuntelija ei toiminut
+    runko.addEventListener('click', (event) => {
+        const row = event.target.closest('tr'); // Tarkistetaan, klikattiinko tr-elementtiä
+        if (!row) return; // Jos ei klikattu riviä, lopetetaan
+        // Tallenna valittu rivi
+        valittuRivi = row;
+        // Näytetään kilpailijan tiedot modaalissa
+        const nimi = row.cells[0].textContent;
+        const osumat = row.cells[1].textContent;
+        const tulos = row.cells[2].textContent;
+        modaalinSisalto.textContent = `
+Nimi: ${nimi}
+Osumat: ${osumat}
+Tulos: ${tulos}
+        `
+        
+        // Näytetään modaali        
+        modal.style.display = 'block';
+    });
+
+    // Sulje modaali
+    modaalinSulkuBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // Poista valittu rivi taulukosta
+    rivinPoistoBtn.addEventListener('click', () => {
+        if (valittuRivi) {
+            valittuRivi.remove(); // Poista rivi
+            modal.style.display = 'none'; // Piilota modaali
+        }
+    });
+    
+
+}); // DOM-kuuntelijan loppusulut

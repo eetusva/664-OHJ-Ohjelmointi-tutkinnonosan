@@ -32,7 +32,7 @@
   }
   
   // Datan purkaminen
-  async function puraSalattuData(salattuData, key) {
+  export async function puraSalattuData(salattuData, key) {
     const purettuData = await crypto.subtle.decrypt(
       {name: "AES-GCM", iv: iv}, key, salattuData); // Salauksen avain, Sama IV, kuin salauksessa, Purettava data
   
@@ -105,25 +105,37 @@
   }
   
   // Haku IndexedDB:stä ja purkaminen
-  async function salatunDatanHaku(id) {  //export tai korvaamaan haeKilpailija()
+  export async function salatunDatanHaku(id) {  //export tai korvaamaan haeKilpailija()
     try {
       // Tietokanta auki
       const db = await avaaTietokanta(); //Tämäkin turha
   
       // Tietojen haku objectStoresta
-      const transaction = db.transaction(['Kilpailijat'], 'readonly');
-      const objectStore = transaction.objectStore('Kilpailijat');
-      const request = objectStore.get(id);
+      const kilpailijaTransaktio = db.transaction(['SalaKilpailijat'], 'readonly');
+      const avainTransaktio = db.transaction(['Avaimet'], 'readonly');
+      const kilpailijaObjectStore = kilpailijaTransaktio.objectStore('SalaKilpailijat');
+      const avainObjectStore = avainTransaktio.objectStore('Avaimet');
+      const kilpailijaRequest = kilpailijaObjectStore.get(1);
+      const avainRequest = avainObjectStore.get(1)
   
-      request.onsuccess = async (event) => {
+      kilpailijaRequest.onsuccess = async (event) => {
         const data = event.target.result;
         if (!data) {
           console.error('Kilpailijaa ei löydy id:llä:', id);
           return;
         }
+
+      avainRequest.onsuccess = async (event) => {
+        const avvain = event.target.result;
+        console.log(avvain);
+        if (!avvain) {
+          console.error('Avainta ei löydy id:llä:', id);
+          return;
+        }
+      }
   
         // Haetaan avain ja IV
-        const importedKey = await importAvain(data.key);
+        const importedKey = await importAvain(avvain);
         const ivArray = new Uint8Array(data.iv);  // Muutetaan takaisin Uint8Arrayksi
         iv = ivArray;  // IV purkamista varten
   

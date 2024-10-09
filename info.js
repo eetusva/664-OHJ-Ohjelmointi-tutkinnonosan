@@ -3,7 +3,7 @@
 export function infoGDPR() {
     return`
     <nav>
-        <button> <a href='index.html'>Etusivu</a></button>
+        <button><a href='index.html'>Etusivu</a></button>
     </nav>
     <h2>Toiminnot:</h2>
 
@@ -13,7 +13,6 @@ export function infoGDPR() {
         -Nimi
         -Yhdistys
         -Summittainen ikä
-        -Sukupuoli
     </pre>
     <p>
         Kaikki tiedot tallentuvat vain päätelaitteeseen,
