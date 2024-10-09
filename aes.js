@@ -90,6 +90,7 @@
       const request = objectStore.add({
         kilpailija: salattuKilpailija,
         iv: Array.from(iv),  // IV taulukoksi tallennettavaksi
+        key: exportedKey
       });
   
       request.onsuccess = () => {
@@ -260,30 +261,6 @@ async function puraTiedot(haettuTieto) {
     await puraKaikkiTiedot();  // Puretaan kaikki tietokannan tiedot
   }, 2000);  // Viive
 })(); 
-  
-
-
-
-
-
-  
-
-
-  export async function haeAvain(db, avain) {
-    let transaction = db.transaction(['Avaimet'], 'readonly');
-    let objectStore = transaction.objectStore('Avaimet');
-    
-    let request = objectStore.get(avain);
-
-    request.onsuccess = function(event) {
-        let avain = request.result;
-        return avain
-    }
-
-    request.onerror = function(event) {
-        console.error('Avaimen haku epäonnistui', event);
-    };    
-}
 
   */
   
