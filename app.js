@@ -502,6 +502,7 @@ addPoints.addEventListener('click', function () {
              console.error('Pisteiden päivityksessä tapahtui jokin virhe:', error);
         });
         addPoints.disabled = true;
+        osumat.textContent = ''; // Tyhjennys
 
         } else {
             return;
