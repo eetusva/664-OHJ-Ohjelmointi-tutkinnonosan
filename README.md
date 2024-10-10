@@ -38,4 +38,4 @@ ver. 0.07
 
 - salatulle datalle oma objectStore
 - Avaimen tallennus Avain-objectStoreen
-- Tulossivun muokkaus
+- Tulossivun muokkaus (kilpailijan poistomahdollisuus)
