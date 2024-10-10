@@ -15,7 +15,7 @@ export function teeNavigointi() {
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        a.href = `#${sivu.toLowerCase().replace(/\s+/g, '')}`;
+        a.href = `${sivu.toLowerCase().replace(/\s+/g, '')}.html`;
         a.textContent = sivu; // Linkin teksti
         li.appendChild(a);
         lista.appendChild(li);
@@ -25,14 +25,15 @@ export function teeNavigointi() {
     return nav;
 }
 
-export function teePaasivu() {
+function teePaasivu() {
     let section = document.createElement('section');
 
     let nappi = document.createElement('button');
     nappi.textContent = 'Tyhjennä tietokanta'; // Tyhjennysnappi
     nappi.onclick = function() {
         if (confirm('Haluatko varmasti tyhjentää tietokannan?')) {
-            console.log('Tietokanta tyhjennetty'); 
+            console.log('Tietokanta tyhjennetty');
+            indexedDB.deleteDatabase('Kilpailijatietokanta');
             // koodisto tietokannan tyhjentämiseksi
         }
     };
