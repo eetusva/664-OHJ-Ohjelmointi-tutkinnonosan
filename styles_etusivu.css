@@ -43,14 +43,18 @@ nav ul li {
 }
 
 nav ul li a {
-    text-decoration: none; 
-    color: white;
-    padding: 15px;
-    display: block;
-    background-color: #007bff; 
-    border-radius: 5px;
+    padding: 10px; 
+    font-size: 18px;
+    color: #070505; 
+    background-color: #d9e4f0; 
+    border: 3px solid #0b9411; 
+    border-radius: 25px;
     text-align: center;
-    font-weight: bold;
+    cursor: pointer; 
+    margin-top: 10px;
+    margin-left: 5px;
+    display: block;
+    text-decoration: none;
 }
 
 nav ul li a:hover {
@@ -58,20 +62,16 @@ nav ul li a:hover {
 }
 
 button {
-    width: 100%; 
     padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    font-size: 18px;
+    color: #070505;
+    background-color: #d9e4f0;
+    border: 3px solid #0b9411;
+    border-radius: 25px;
     cursor: pointer;
     margin-top: 10px;
+    margin-left: 5px;
 }
-
-button:hover {
-    background-color: #0056b3;
-}
-
 .btn-small-red {
     width: 120px; 
     padding: 8px 15px;
@@ -88,4 +88,37 @@ button:hover {
 .btn-small-red:hover {
     background-color: #c82333; 
     text-decoration: none; 
+}
+
+/*------modaali-------*/
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 3px solid #0b9411;
+    border-radius: 10px;
+    width: 60%; 
+    text-align: center;
+   
+}
+
+
+.close {
+    color: #691313;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    text-decoration: none;
 }

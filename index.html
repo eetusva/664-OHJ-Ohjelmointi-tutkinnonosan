@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="styles_etusivu.css">
 </head>
 <body>
+     <div id="gdprModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalInfo"></div>
+        </div>
+    </div>
+    
     <div id="app">
         <header id="header"></header>
 
@@ -20,8 +27,6 @@
         <section id="main-content"></section>
     </div>
 
-    <script type="module" src="etusivu.js">
-        
-    </script>
+    <script type="module" src="etusivu.js"></script>
 </body>
 </html>
