@@ -1,6 +1,6 @@
   
   // IV (initialization vector)
-  let iv = window.crypto.getRandomValues(new Uint8Array(12));  // Satunnainen IV, salaus/purku
+  
   
   // Avain salaukseen ja purkamiseen
   export async function luoAvain() {
@@ -20,25 +20,40 @@
     return await crypto.subtle.importKey("jwk", parsedKey, { name: "AES-GCM" }, true, ["encrypt", "decrypt"]);
   }
   
-  // Datan salaaminen
-  async function salaaData(kilpailijaTiedot, key) {
-    const encoder = new TextEncoder();
-    const salattavaData = encoder.encode(kilpailijaTiedot);
-    
-    const salattuData = await crypto.subtle.encrypt(
-      {name: "AES-GCM", iv: iv }, key, salattavaData); // Salauksen avain, satunnainen IV
-  
-    return salattuData;
+// Datan salaaminen
+async function salaaData(kilpailijaTiedot, key) {
+  //let iv = window.crypto.getRandomValues(new Uint8Array(12));  // Satunnainen IV, salaus/purku
+  const encoder = new TextEncoder();
+  const salattavaData = encoder.encode(JSON.stringify(kilpailijaTiedot));
+
+  // Luo satunnainen IV salaukselle
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+  const salattuData = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: iv }, key, salattavaData
+  );
+
+  // Palauta salattu data ja IV, koska IV täytyy tallentaa myöhempää purkua varten
+  return { salattuData, iv };
+}
+
+// Datan purkaminen
+export async function puraSalattuData(salattuData, key, iv) {
+  try {
+      const purettuData = await crypto.subtle.decrypt(
+          { name: "AES-GCM", iv: iv }, key, salattuData
+      );
+
+      const decoder = new TextDecoder();
+      const decodedData = decoder.decode(purettuData);
+
+      return JSON.parse(decodedData);
+  } catch (error) {
+      console.error('Virhe salauksen purkamisessa: ', error);
+      throw error;
   }
-  
-  // Datan purkaminen
-  export async function puraSalattuData(salattuData, key) {
-    const purettuData = await crypto.subtle.decrypt(
-      {name: "AES-GCM", iv: iv}, key, salattuData); // Salauksen avain, Sama IV, kuin salauksessa, Purettava data
-  
-    const decoder = new TextDecoder();
-    return decoder.decode(purettuData);
-  }
+}
+
   
   // Avaa tai luo IndexedDB-tietokanta ja objectStore 'Kilpailijat'
   function avaaTietokanta() {
@@ -113,11 +128,11 @@
   
       // Tietojen haku objectStoresta
       const kilpailijaTransaktio = db.transaction(['SalaKilpailijat'], 'readonly');
-      const avainTransaktio = db.transaction(['Avaimet'], 'readonly');
+      //const avainTransaktio = db.transaction(['Avaimet'], 'readonly');
       const kilpailijaObjectStore = kilpailijaTransaktio.objectStore('SalaKilpailijat');
-      const avainObjectStore = avainTransaktio.objectStore('Avaimet');
+      //const avainObjectStore = avainTransaktio.objectStore('Avaimet');
       const kilpailijaRequest = kilpailijaObjectStore.get(1);
-      const avainRequest = avainObjectStore.get(1)
+      //const avainRequest = avainObjectStore.get(1)
   
       kilpailijaRequest.onsuccess = async (event) => {
         const data = event.target.result;
@@ -194,14 +209,14 @@
   }
   
 // Iteroidaan tietueet ja puretaan salaus
-async function puraKaikkiTiedot() {
+export async function puraKaikkiTiedot() {
   try {
     // Tietokanta auki
     const db = await avaaTietokanta();
 
     // Tietueitten haku (sync)
-    const transaction = db.transaction(['Kilpailijat'], 'readonly');
-    const objectStore = transaction.objectStore('Kilpailijat');
+    const transaction = db.transaction(['SalaKilpailijat'], 'readonly');
+    const objectStore = transaction.objectStore('SalaKilpailijat');
     const request = objectStore.openCursor();
     const haettuTieto = [];
 
@@ -228,20 +243,19 @@ async function puraKaikkiTiedot() {
 
 // Tietojen purku
 async function puraTiedot(haettuTieto) {
-    console.log(haettuTieto)
-    for (const data of haettuTieto) {
-        //console.log(data)
-        // Avain ja IV jokaiselle tietueelle
-        const tuotuAvain = await importAvain(data.key);
-        const ivArray = new Uint8Array(data.iv);  // Muutetaan takaisin Uint8Arrayksi
-        iv = ivArray;  // Asetetaan IV purkamista varten
+  console.log(haettuTieto);
+  for (const data of haettuTieto) {
+      // Avain ja IV jokaiselle tietueelle
+      const tuotuAvain = await importAvain(data.key);
+      const ivArray = new Uint8Array(data.iv);  // Muutetaan takaisin Uint8Arrayksi
 
-        // Purku: kilpailija
-        const purettuKilpailija = await puraSalattuData(data.kilpailija, tuotuAvain);
+      // Purku: kilpailija
+      const purettuKilpailija = await puraSalattuData(data.kilpailija, tuotuAvain, ivArray);
 
-        console.log(`ID: ${data.id} | Purettu nimi: ${purettuKilpailija.etunimi} | Purettu osumat: ${purettuKilpailija.tulokset.osumalista}`);
-    }
+      console.log(`ID: ${data.id} | Purettu nimi: ${purettuKilpailija.etunimi} ${purettuKilpailija.sukunimi} from ${purettuKilpailija.seura}`);
+  }
 }
+
 
   
   

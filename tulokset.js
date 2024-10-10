@@ -1,5 +1,6 @@
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
 
     let kontti = document.createElement('div')
@@ -128,9 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function haeKilpailijat() {
         return new Promise(async (resolve, reject) => {
 
-            //const {salatunDatanHaku } = await import('./aes.js');
-            //let salainen = salatunDatanHaku(1);
-            //console.log(salainen)
+            const { puraKaikkiTiedot } = await import('./aes.js');
+            puraKaikkiTiedot()
 
             // Avataan tietokanta
             const request = indexedDB.open('Kilpailijatietokanta', 1);
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    haeSarjoittain('all');
+    haeSarjoittain('all')
 
     //Modaali    
     const modal = document.getElementById('modaali'); //modal, ettei sekoitu elementtin nimeen
@@ -275,4 +275,3 @@ Tulos: ${tulos}
     }  
 
 }); // DOM-kuuntelijan loppusulut
-

@@ -1,4 +1,6 @@
-export function teeOtsikko() {
+
+
+function teeOtsikko() {
     let otsikko = document.createElement('header');
     let h1 = document.createElement('h1');
     h1.textContent = 'RessuKisaLaskuri'; // otsikko
@@ -6,7 +8,7 @@ export function teeOtsikko() {
     return otsikko;
 }
 
-export function teeNavigointi() {
+function teeNavigointi() {
     let nav = document.createElement('nav');
     let lista = document.createElement('ul');
 
