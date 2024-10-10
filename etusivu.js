@@ -1,4 +1,4 @@
-export function teeOtsikko() {
+function teeOtsikko() {
     let otsikko = document.createElement('header');
     let h1 = document.createElement('h1');
     h1.textContent = 'RessuKisaLaskuri'; // otsikko
@@ -6,7 +6,7 @@ export function teeOtsikko() {
     return otsikko;
 }
 
-export function teeNavigointi() {
+function teeNavigointi() {
     let nav = document.createElement('nav');
     let lista = document.createElement('ul');
 
@@ -25,7 +25,7 @@ export function teeNavigointi() {
     return nav;
 }
 
-export function teePaasivu() {
+function teePaasivu() {
     let section = document.createElement('section');
 
     let nappi = document.createElement('button');
@@ -44,3 +44,38 @@ export function teePaasivu() {
 document.getElementById('header').appendChild(teeOtsikko());
 document.getElementById('navigation').appendChild(teeNavigointi());
 document.getElementById('main-content').appendChild(teePaasivu());
+
+function infoGDPR() {
+    const infomsg = `
+    
+    <h2>Toiminnot:</h2>
+    
+    <h3>Henkilöstä kerättävät tiedot:</h3>
+    <pre>
+    -Nimi
+    -Yhdistys
+    -Summittainen ikä
+    </pre>
+    <p>
+        Kaikki tiedot tallentuvat vain päätelaitteeseen,
+        mitään tietoja ei lähetetä verkkoon. <br><br>
+        Kaikki päätelaitteeseen tallentuvat tiedot salataan
+        ennen tallentamista. <br><br>
+        Kun ohjelma suljetaan, poistuvat kaikki tiedot
+        myös päätelaitteelta.
+    </p>`;
+
+    document.getElementById('modalInfo').innerHTML = infomsg;
+    document.getElementById('gdprModal').style.display = 'block'; 
+}
+
+function closeModal() {
+    document.getElementById('gdprModal').style.display = 'none'; 
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('gdprModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
