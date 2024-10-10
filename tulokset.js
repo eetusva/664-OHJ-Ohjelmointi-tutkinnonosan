@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // rivinlisäysfunktio
-    function lisaaRivi(nimi, osumat, tulos) {
+    function lisaaRivi(nimi, osumat, tulos, id, seura) {
 
         const tableBody = document.querySelector('tbody');
         const rivi = document.createElement('tr');   
@@ -106,10 +106,21 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const tulosSarake = document.createElement('td');
         tulosSarake.textContent = tulos;
+
+        const idSarake = document.createElement('td')
+        idSarake.textContent = id;
+        idSarake.style.display = 'none';
+
+        const seuraSarake = document.createElement('td');
+        seuraSarake.textContent = seura;
+        seuraSarake.style.display = 'none';
+
         
         rivi.appendChild(nimisarake);
         rivi.appendChild(osumaSarake);
-        rivi.appendChild(tulosSarake);       
+        rivi.appendChild(tulosSarake);  
+        rivi.appendChild(idSarake); 
+        rivi.appendChild(seuraSarake);
         
         tableBody.appendChild(rivi); //lisätään rivit tbodyyn
     }
@@ -141,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const requestAll = objectStore.openCursor();
     
                 requestAll.onsuccess = function(event) {
+                    
                     const cursor = event.target.result;
                     if (cursor) {
                         kilpailijat.push(cursor.value); // Lisätään arvot listaan
@@ -166,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         haeKilpailijat().then((kilpailijat) => {
             const sarjaKilpailijat = sarjoittain(kilpailijat, sarja);
             sarjaKilpailijat.forEach(item => {
-                lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet, item.seura);
+                lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet, item.id, item.seura);
             });
             //console.log('Kilpailijat:', kilpailijat);
         }).catch((error) => {
@@ -189,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     haeSarjoittain('all');
 
-
     //Modaali    
     const modal = document.getElementById('modaali'); //modal, ettei sekoitu elementtin nimeen
     const modaalinSisalto = document.getElementById('korttiSisalto');
@@ -207,8 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const nimi = row.cells[0].textContent;
         const osumat = row.cells[1].textContent;
         const tulos = row.cells[2].textContent;
+        const seura = row.cells[4].textContent;
         modaalinSisalto.textContent = `
 Nimi: ${nimi}
+Seura: ${seura}
 Osumat: ${osumat}
 Tulos: ${tulos}
         `
@@ -225,10 +238,41 @@ Tulos: ${tulos}
     // Poista valittu rivi taulukosta
     rivinPoistoBtn.addEventListener('click', () => {
         if (valittuRivi) {
+            let avain = valittuRivi.cells[3].textContent;
+            console.log(avain);
             valittuRivi.remove(); // Poista rivi
             modal.style.display = 'none'; // Piilota modaali
+            poistaTietue('Kilpailijatietokanta', 1 , 'Kilpailijat', Number(avain));
         }
     });
+
+    function poistaTietue(tietokantaNimi, tietokantaVersio, storeNimi, avain) {
+        let request = indexedDB.open(tietokantaNimi, tietokantaVersio);
     
+        request.onerror = function(event) {
+            console.log("Tietokannan avaaminen epäonnistui:", event.target.errorCode);
+        };
+    
+        request.onsuccess = function(event) {
+            let db = event.target.result;
+            let transaction = db.transaction([storeNimi], "readwrite");
+            let objectStore = transaction.objectStore(storeNimi);
+    
+            let poistoRequest = objectStore.delete(avain);
+    
+            poistoRequest.onsuccess = function() {
+                console.log("Tietue poistettiin onnistuneesti.");
+            };
+    
+            poistoRequest.onerror = function(event) {
+                console.log("Tietueen poistaminen epäonnistui:", event.target.errorCode);
+            };
+        };
+    
+        request.onupgradeneeded = function(event) {
+            console.log("Tietokannan päivittäminen ei tarpeen tässä, mutta päivityksen käsittelijä täällä.");
+        };
+    }  
 
 }); // DOM-kuuntelijan loppusulut
+
