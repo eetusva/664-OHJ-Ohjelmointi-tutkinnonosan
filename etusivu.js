@@ -10,7 +10,7 @@ function teeNavigointi() {
     let nav = document.createElement('nav');
     let lista = document.createElement('ul');
 
-    let sivut = ['Kisan Luonti', 'Kilpailijan Luonti', 'Laskuri', 'Tulokset'];
+    let sivut = ['Kisan Luonti', 'Kilpailijan Luonti', 'Tulokset'];
     
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
@@ -29,15 +29,22 @@ function teePaasivu() {
     let section = document.createElement('section');
 
     let nappi = document.createElement('button');
+    let gdpr_nappi = document.createElement('button');
+    gdpr_nappi.textContent = 'GDPR';
     nappi.textContent = 'Tyhjennä tietokanta'; // Tyhjennysnappi
     nappi.onclick = function() {
         if (confirm('Haluatko varmasti tyhjentää tietokannan?')) {
             console.log('Tietokanta tyhjennetty'); 
             // koodisto tietokannan tyhjentämiseksi
+            indexedDB.deleteDatabase('Kilpailijatietokanta');
         }
     };
+    gdpr_nappi.onclick = () => {
+        infoGDPR();
 
+    }
     section.appendChild(nappi);
+    section.appendChild(gdpr_nappi);
     return section;
 }
 
