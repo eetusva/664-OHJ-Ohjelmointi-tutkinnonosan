@@ -107,4 +107,4 @@ function kasitteleLomake(event) {
 
 document.getElementById("kisan-lomake").addEventListener("submit", kasitteleLomake);
 
-//alustaIndexedDB();
+alustaIndexedDB();
