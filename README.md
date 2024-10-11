@@ -39,3 +39,9 @@ ver. 0.07
 - salatulle datalle oma objectStore
 - Avaimen tallennus Avain-objectStoreen
 - Tulossivun muokkaus (kilpailijan poistomahdollisuus)
+
+ver. 0.08
+
+- Kilpailun luonnille html-rakenne
+- Kilpailun luonnille js-puoli (lomakkeen tietojen käsittelyä)
+- styles_etusivu.css tiedostoon muutokset tekstiboksien asettelulle.
