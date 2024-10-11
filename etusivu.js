@@ -12,7 +12,7 @@ function teeNavigointi() {
     let lista = document.createElement('ul');
 
     let sivut = [
-        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.js' },
+        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.html' },
         { nimi: 'Kilpailijan Luonti', tiedosto: 'app.js' },
         { nimi: 'Tulokset', tiedosto: 'tulokset.js' }
     ];
