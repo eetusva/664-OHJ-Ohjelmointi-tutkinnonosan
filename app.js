@@ -235,12 +235,12 @@ let laukausmaara;
     });
 //});
 //---------------------------------------------------------------------- Laskuri-osio--------------------------------------------------------------------------------------------------
-const request = indexedDB.open("KisadataDB", 1);
+const request = indexedDB.open("Kilpailijatietokanta", 1);
 request.onsuccess = function(event) {
     db = event.target.result;
 
-    const transaction = db.transaction(["Kilpailut"], "readonly");
-    const store = transaction.objectStore("Kilpailut");
+    const transaction = db.transaction(["Kilpailu"], "readonly");
+    const store = transaction.objectStore("Kilpailu");
 
     // laukausmäärän hakeminen
     const cursorRequest = store.openCursor(null, "prev");
