@@ -14,7 +14,7 @@ function teeNavigointi() {
     let lista = document.createElement('ul');
 
     let sivut = [
-        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.html' },
+        { nimi: 'Kisan Luonti', tiedosto: 'kisanluonti.html' },
         { nimi: 'Kilpailijan Luonti', tiedosto: 'kilpailijanluonti.html' },
         { nimi: 'Tulokset', tiedosto: 'tulokset.html' }
     ];
