@@ -17,7 +17,7 @@ export async function tallennaKilpailija(db, uusiKayttaja, tulos_naytto) {
 
         setTimeout(() => {
             tulos_naytto.textContent = '';
-        }, 5000);
+        }, 4000);
         document.getElementById('login-form').reset();
     };
 

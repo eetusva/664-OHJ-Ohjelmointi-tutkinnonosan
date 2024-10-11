@@ -4,7 +4,7 @@ let db;
 import { paivitaPisteet } from './pisteet.js';
 let osumalista = [];
 //--------------------------------------------------------------Kilpailijan lisäys sivu---------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded',() => {
+//document.addEventListener('DOMContentLoaded',() => {
     // kontti
     loginContainer = document.createElement('div');
     loginContainer.className = 'login-container';
@@ -168,15 +168,15 @@ document.addEventListener('DOMContentLoaded',() => {
     document.body.appendChild(loginContainer);
 
 
-})
+//})
 
-document.addEventListener('DOMContentLoaded', async () => {
+//document.addEventListener('DOMContentLoaded', async () => {
     // tietokannan avaaminen 
     const { avaaTietokanta } = await import('./db.js');
     db = await avaaTietokanta();
-});
+//});
 
-document.addEventListener('DOMContentLoaded', function() {
+//document.addEventListener('DOMContentLoaded', function() {
     // Kilpailijan tallennus lomakkeen lähetyksessä
     document.getElementById('login-form').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -232,10 +232,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const { haeKilpailijaIDlla } = await import('./haku.js');
         haeKilpailijaIDlla(db, kilpailijaId, tulos_naytto);
     });
-});
+//});
 //---------------------------------------------------------------------- Laskuri-osio--------------------------------------------------------------------------------------------------
 
-document.addEventListener('DOMContentLoaded', function () {
+//document.addEventListener('DOMContentLoaded', function () {
     // Laskuri-painike
     let counterButton = document.createElement('button');
     counterButton.textContent = 'Laskuri';
@@ -509,4 +509,4 @@ addPoints.addEventListener('click', function () {
         }
         });    
     });
-});
+//});

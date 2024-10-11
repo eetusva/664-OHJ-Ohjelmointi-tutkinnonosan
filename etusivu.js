@@ -1,3 +1,5 @@
+
+
 export function teeOtsikko() {
     let otsikko = document.createElement('header');
     let h1 = document.createElement('h1');
@@ -7,6 +9,7 @@ export function teeOtsikko() {
 }
 
 function teeNavigointi() {
+    let ladattavaSivu;
     let nav = document.createElement('nav');
     let lista = document.createElement('ul');
 
@@ -15,7 +18,8 @@ function teeNavigointi() {
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        a.href = `${sivu.toLowerCase().replace(/\s+/g, '')}.html`;
+        ladattavaSivu = `${sivu.toLowerCase().replace(/\s+/g, '')}.js`; //a.href
+        console.log(ladattavaSivu);
         a.textContent = sivu; // Linkin teksti
         li.appendChild(a);
         lista.appendChild(li);
@@ -25,6 +29,22 @@ function teeNavigointi() {
     return nav;
 }
 
+
+
+
+function lataaSisalto(ladattavaSivu) {  // lisäys
+    const script = document.createElement('script');  
+    script.src = ladattavaSivu;
+    script.type = 'module'; //vaiko 'module'?
+    
+    const sisaltoElementti = document.getElementById('app');
+    sisaltoElementti.innerHTML = '';
+    
+    sisaltoElementti.appendChild(script);
+  }
+
+
+
 function teePaasivu() {
     let section = document.createElement('section');
 
@@ -33,13 +53,13 @@ function teePaasivu() {
     gdpr_nappi.textContent = 'GDPR';
     nappi.textContent = 'Tyhjennä tietokanta'; // Tyhjennysnappi
     nappi.onclick = function() {
-        if (confirm('Haluatko varmasti tyhjentää tietokannan?')) {
-            console.log('Tietokanta tyhjennetty');
+        if (confirm('Haluatko varmasti tyhjentää tietokannan?')) {            
             indexedDB.deleteDatabase('Kilpailijatietokanta');
             // koodisto tietokannan tyhjentämiseksi
-            indexedDB.deleteDatabase('Kilpailijatietokanta');
+            console.log('Tietokanta tyhjennetty');
         }
     };
+
     gdpr_nappi.onclick = () => {
         infoGDPR();
 
@@ -67,19 +87,21 @@ function infoGDPR() {
     <p>
         Kaikki tiedot tallentuvat vain päätelaitteeseen,
         mitään tietoja ei lähetetä verkkoon. <br><br>
-        Kaikki päätelaitteeseen tallentuvat tiedot salataan
-        ennen tallentamista. <br><br>
-        Kun ohjelma suljetaan, poistuvat kaikki tiedot
-        myös päätelaitteelta.
+        
+        Kilpailutietojen tietokannan tyhjentäminen on mahdollista 
+        etusivulla 'Tyhjennä tietokanta'-painikkeella.
     </p>`;
 
     document.getElementById('modalInfo').innerHTML = infomsg;
     document.getElementById('gdprModal').style.display = 'block'; 
 }
 
-function closeModal() {
-    document.getElementById('gdprModal').style.display = 'none'; 
-}
+document.getElementById('gdprModal').addEventListener('click', () => 
+    {document.getElementById('gdprModal').style.display = 'none';});
+
+//function closeModal() {
+//    document.getElementById('gdprModal').style.display = 'none'; 
+//}
 
 window.onclick = function(event) {
     const modal = document.getElementById('gdprModal');
@@ -87,3 +109,15 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 }
+
+document.querySelectorAll('li')[0].addEventListener('click', function() {
+    lataaSisalto('luokilpailu.js');
+});
+
+document.querySelectorAll('li')[1].addEventListener('click', function() {
+    lataaSisalto('app.js');
+});
+
+document.querySelectorAll('li')[2].addEventListener('click', function() {
+    lataaSisalto('tulokset.js');
+});

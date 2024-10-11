@@ -17,8 +17,7 @@ export function infoGDPR() {
     <p>
         Kaikki tiedot tallentuvat vain päätelaitteeseen,
         mitään tietoja ei lähetetä verkkoon. <br><br>
-        Kaikki päätelaitteeseen tallentuvat tiedot salataan
-        ennen tallentamista. <br><br>
+        
         Kun ohjelma suljetaan, poistuvat kaikki tiedot
         myös päätelaitteelta.
     </p>

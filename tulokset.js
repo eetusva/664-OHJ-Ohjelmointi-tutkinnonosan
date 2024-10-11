@@ -1,7 +1,8 @@
 
 
-
-document.addEventListener('DOMContentLoaded', () => {
+//document.addEventListener('DOMContentLoaded', () => {
+    let sija = 1;
+    let sarja;
 
     let kontti = document.createElement('div')
     kontti.className = 'kontti'
@@ -25,14 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let otsikko = document.createElement('tr');
     otsikot.appendChild(otsikko);
 
+    let sijaOtsikko = document.createElement('th');
     let nimiOtsikko = document.createElement('th');
     let osumaOtsikko = document.createElement('th');
     let tulosOtsikko = document.createElement('th');
 
+    sijaOtsikko.textContent = ' '
     nimiOtsikko.textContent = 'Nimi';
     osumaOtsikko.textContent = 'Osumat';
     tulosOtsikko.textContent = 'Yht.'
 
+    otsikko.appendChild(sijaOtsikko);
     otsikko.appendChild(nimiOtsikko);
     otsikko.appendChild(osumaOtsikko);
     otsikko.appendChild(tulosOtsikko);
@@ -52,9 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let H50 = document.createElement('button');
     H50.textContent = 'H50';
 
-    Kaikki.onclick = () => haeSarjoittain('all');
-    H.onclick = () => haeSarjoittain('yleinen');
-    H50.onclick = () => haeSarjoittain('senior');
+    Kaikki.onclick = () => {sija = 1; haeSarjoittain('all')};
+    H.onclick = () => {sija = 1; haeSarjoittain('yleinen')};
+    H50.onclick = () => {sija = 1; haeSarjoittain('senior')};
 
     btnKontti.appendChild(Kaikki);
     btnKontti.appendChild(H)
@@ -95,9 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // rivinlisäysfunktio
     function lisaaRivi(nimi, osumat, tulos, id, seura) {
-
+        
         const tableBody = document.querySelector('tbody');
-        const rivi = document.createElement('tr');   
+        const rivi = document.createElement('tr');
+
+        const sijaSarake = document.createElement('td');
+        sijaSarake.textContent = sija+'.';
+        sija += 1;
         
         const nimisarake = document.createElement('td');
         nimisarake.textContent = nimi;
@@ -116,12 +124,17 @@ document.addEventListener('DOMContentLoaded', () => {
         seuraSarake.textContent = seura;
         seuraSarake.style.display = 'none';
 
-        
+        const sarjaSarake = document.createElement('td');
+        sarjaSarake.textContent = sarja;
+        sarjaSarake.style.display = 'none';
+
+        rivi.appendChild(sijaSarake);
         rivi.appendChild(nimisarake);
         rivi.appendChild(osumaSarake);
         rivi.appendChild(tulosSarake);  
         rivi.appendChild(idSarake); 
         rivi.appendChild(seuraSarake);
+        rivi.appendChild(sarjaSarake);
         
         tableBody.appendChild(rivi); //lisätään rivit tbodyyn
     }
@@ -178,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         haeKilpailijat().then((kilpailijat) => {
             const sarjaKilpailijat = sarjoittain(kilpailijat, sarja);
             sarjaKilpailijat.forEach(item => {
-                lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet, item.id, item.seura);
+                lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet, item.id, item.seura, item.sarja);
             });
             //console.log('Kilpailijat:', kilpailijat);
         }).catch((error) => {
@@ -215,13 +228,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Tallenna valittu rivi
         valittuRivi = row;
         // Näytetään kilpailijan tiedot modaalissa
-        const nimi = row.cells[0].textContent;
-        const osumat = row.cells[1].textContent;
-        const tulos = row.cells[2].textContent;
-        const seura = row.cells[4].textContent;
+        const nimi = row.cells[1].textContent;
+        const osumat = row.cells[2].textContent;
+        const tulos = row.cells[3].textContent;
+        const seura = row.cells[5].textContent;
+        const sarja = row.cells[6].textContent;
         modaalinSisalto.textContent = `
 Nimi: ${nimi}
 Seura: ${seura}
+Sarja: ${sarja}
 Osumat: ${osumat}
 Tulos: ${tulos}
         `
@@ -238,7 +253,7 @@ Tulos: ${tulos}
     // Poista valittu rivi taulukosta
     rivinPoistoBtn.addEventListener('click', () => {
         if (valittuRivi) {
-            let avain = valittuRivi.cells[3].textContent;
+            let avain = valittuRivi.cells[4].textContent;
             console.log(avain);
             valittuRivi.remove(); // Poista rivi
             modal.style.display = 'none'; // Piilota modaali
@@ -274,4 +289,4 @@ Tulos: ${tulos}
         };
     }  
 
-}); // DOM-kuuntelijan loppusulut
+//}); // DOM-kuuntelijan loppusulut

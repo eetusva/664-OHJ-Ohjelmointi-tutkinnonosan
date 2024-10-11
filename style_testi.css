@@ -92,6 +92,53 @@ select{
     transform: scale(3);
 }
 
+h1 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+nav ul {
+    list-style-type: none; 
+    padding: 0;
+}
+
+nav ul li {
+    margin-bottom: 10px;
+}
+
+nav ul li a {
+    padding: 10px; 
+    font-size: 18px;
+    color: #070505; 
+    background-color: #d9e4f0; 
+    border: 3px solid #0b9411; 
+    border-radius: 25px;
+    text-align: center;
+    cursor: pointer; 
+    margin-top: 10px;
+    margin-left: 5px;
+    display: block;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    background-color: #0056b3; 
+}
+
+#image-container {
+    margin: 20px 0;
+    display: flex;          
+    justify-content: center; 
+}
+
+#target-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
 .kontti {
     width: 99vw;
     height: 97vh;

@@ -1,6 +1,6 @@
   
   // IV (initialization vector)
-  
+  let iv = window.crypto.getRandomValues(new Uint8Array(12));  // Satunnainen IV, salaus/purku
   
   // Avain salaukseen ja purkamiseen
   export async function luoAvain() {
@@ -22,20 +22,17 @@
   
 // Datan salaaminen
 async function salaaData(kilpailijaTiedot, key) {
-  //let iv = window.crypto.getRandomValues(new Uint8Array(12));  // Satunnainen IV, salaus/purku
+
   const encoder = new TextEncoder();
   const salattavaData = encoder.encode(JSON.stringify(kilpailijaTiedot));
-
-  // Luo satunnainen IV salaukselle
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
   const salattuData = await crypto.subtle.encrypt(
       { name: "AES-GCM", iv: iv }, key, salattavaData
   );
 
-  // Palauta salattu data ja IV, koska IV täytyy tallentaa myöhempää purkua varten
   return { salattuData, iv };
 }
+
 
 // Datan purkaminen
 export async function puraSalattuData(salattuData, key, iv) {
@@ -53,6 +50,8 @@ export async function puraSalattuData(salattuData, key, iv) {
       throw error;
   }
 }
+
+
 
   
   // Avaa tai luo IndexedDB-tietokanta ja objectStore 'Kilpailijat'
@@ -169,6 +168,7 @@ export async function puraSalattuData(salattuData, key, iv) {
     }
   }
   
+  /*
   async function tallennaAvain(kilpailijaId) { // Parempi löytyy haku.js
     const db = await avaaTietokanta();
   
@@ -207,6 +207,7 @@ export async function puraSalattuData(salattuData, key, iv) {
       }
     }
   }
+    */
   
 // Iteroidaan tietueet ja puretaan salaus
 export async function puraKaikkiTiedot() {
@@ -247,10 +248,12 @@ async function puraTiedot(haettuTieto) {
   for (const data of haettuTieto) {
       // Avain ja IV jokaiselle tietueelle
       const tuotuAvain = await importAvain(data.key);
+      //console.log(tuotuAvain)
       const ivArray = new Uint8Array(data.iv);  // Muutetaan takaisin Uint8Arrayksi
 
       // Purku: kilpailija
-      const purettuKilpailija = await puraSalattuData(data.kilpailija, tuotuAvain, ivArray);
+      const purettuKilpailija = await puraSalattuData(data.kilpailija.salattuData, tuotuAvain, ivArray);
+      //console.log(purettuKilpailija)
 
       console.log(`ID: ${data.id} | Purettu nimi: ${purettuKilpailija.etunimi} ${purettuKilpailija.sukunimi} from ${purettuKilpailija.seura}`);
   }
