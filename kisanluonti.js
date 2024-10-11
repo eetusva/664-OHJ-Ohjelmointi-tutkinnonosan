@@ -1,7 +1,7 @@
 let db;
 
 // IndexedDB ja object store alustus
-function alustaIndexedDB() {
+async function alustaIndexedDB() {
 
     const { avaaTietokanta } = await import('./db.js');
     db = await avaaTietokanta();
