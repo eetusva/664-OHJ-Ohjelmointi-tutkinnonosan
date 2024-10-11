@@ -2,6 +2,10 @@ let db;
 
 // IndexedDB ja object store alustus
 function alustaIndexedDB() {
+
+    const { avaaTietokanta } = await import('./db.js');
+    db = await avaaTietokanta();
+    /*
     let request = indexedDB.open('Kilpailijatietokanta', 1);
 
     request.onupgradeneeded = function(event) {
@@ -20,7 +24,7 @@ function alustaIndexedDB() {
 
     request.onerror = function(event) {
         console.error('IndexedDB-avaus epäonnistui:', event.target.errorCode);
-    };
+    }; */
 }
 
 // tietojen tallennus IndexedDB:hen
