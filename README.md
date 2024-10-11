@@ -45,3 +45,8 @@ ver. 0.08
 - Kilpailun luonnille html-rakenne
 - Kilpailun luonnille js-puoli (lomakkeen tietojen käsittelyä)
 - styles_etusivu.css tiedostoon muutokset tekstiboksien asettelulle.
+
+ver. 0.09  
+- SPA
+- Muotoilumuutokset
+- tulossivun muotoilut

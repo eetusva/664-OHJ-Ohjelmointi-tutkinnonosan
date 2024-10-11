@@ -3,6 +3,7 @@ let loginContainer;
 let db;
 import { paivitaPisteet } from './pisteet.js';
 let osumalista = [];
+let laukausmaara;
 //--------------------------------------------------------------Kilpailijan lisäys sivu---------------------------------------------------------------------
 //document.addEventListener('DOMContentLoaded',() => {
     // kontti
@@ -234,7 +235,35 @@ let osumalista = [];
     });
 //});
 //---------------------------------------------------------------------- Laskuri-osio--------------------------------------------------------------------------------------------------
+const request = indexedDB.open("Kilpailijatietokanta", 1);
+request.onsuccess = function(event) {
+    db = event.target.result;
 
+    const transaction = db.transaction(["Kilpailu"], "readonly");
+    const store = transaction.objectStore("Kilpailu");
+
+    // laukausmäärän hakeminen
+    const cursorRequest = store.openCursor(null, "prev");
+
+    cursorRequest.onsuccess = function(event) {
+        const cursor = event.target.result;
+        if (cursor) {
+            const kilpailu = cursor.value;
+            laukausmaara = kilpailu.laukausmaara;
+            
+            
+        } else {
+            console.log("Tietokanta on tyhjä.");
+        }
+    };
+
+    cursorRequest.onerror = function(event) {
+        console.error("Haku epäonnistui: ", event.target.errorCode);
+    };
+};
+request.onerror = function(event) {
+    console.error("IndexedDB virhe: ", event.target.errorCode);
+};
 //document.addEventListener('DOMContentLoaded', function () {
     // Laskuri-painike
     let counterButton = document.createElement('button');
@@ -429,7 +458,7 @@ let osumalista = [];
                 osumat.textContent = osumalista.join(' ');
                 animatePoints(viimeisin_osuma); // animoi viimeisimmän lisäyksen
                 removeButton_ispressed = false;
-                if (yhteisOsumat >= 10 && !removeButton_ispressed) { // Tämä estää näppäilemästä liikaa osumia mutta antaa myös korjata
+                if (yhteisOsumat >= laukausmaara && !removeButton_ispressed) { // Tämä estää näppäilemästä liikaa osumia mutta antaa myös korjata
                     setTimeout(() => {
                         alert('Olet syöttänyt vaadittavan laukausmäärän!');
                     }, 100);                  
@@ -486,7 +515,7 @@ addPoints.addEventListener('click', function () {
         alert('Valitse ensin kilpailija!');
         return;
     }
-    if(yhteisOsumat < 10){
+    if(yhteisOsumat < laukausmaara){
         alert('Kaikki osumat on syötettävä ennen pisteiden lähetystä');
         return;
     }
