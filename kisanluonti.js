@@ -1,4 +1,4 @@
-let db;
+/*let db;
 
 // IndexedDB ja object store alustus
 function alustaIndexedDB() {
@@ -46,7 +46,7 @@ function tallennaKilpailu(yhdistys, paikka, ajankohta, laukausmaara) {
         console.error('Kilpailun tallennus epäonnistui:', event.target.error);
     };
 }
-
+*/
 // kilpailun tietojen näyttäminen
 function naytaKilpailunTiedot(kilpailuId, yhdistys, paikka, ajankohta, laukausmaara) {
     document.getElementById("kilpailun-tiedot").innerHTML = `
@@ -107,4 +107,4 @@ function kasitteleLomake(event) {
 
 document.getElementById("kisan-lomake").addEventListener("submit", kasitteleLomake);
 
-alustaIndexedDB();
+//alustaIndexedDB();
