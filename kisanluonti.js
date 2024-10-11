@@ -1,15 +1,15 @@
-/*let db;
+let db;
 
 // IndexedDB ja object store alustus
 function alustaIndexedDB() {
-    let request = indexedDB.open('KisadataDB', 1);
+    let request = indexedDB.open('Kilpailijatietokanta', 1);
 
     request.onupgradeneeded = function(event) {
         db = event.target.result;
 
         // object store 'Kilpailut' luonti
-        if (!db.objectStoreNames.contains('Kilpailut')) {
-            db.createObjectStore('Kilpailut', { keyPath: 'id', autoIncrement: true });
+        if (!db.objectStoreNames.contains('Kilpailu')) {
+            db.createObjectStore('Kilpailu', { keyPath: 'id', autoIncrement: true });
         }
     };
 
@@ -25,8 +25,8 @@ function alustaIndexedDB() {
 
 // tietojen tallennus IndexedDB:hen
 function tallennaKilpailu(yhdistys, paikka, ajankohta, laukausmaara) {
-    let transaction = db.transaction(['Kilpailut'], 'readwrite');
-    let store = transaction.objectStore('Kilpailut');
+    let transaction = db.transaction(['Kilpailu'], 'readwrite');
+    let store = transaction.objectStore('Kilpailu');
     let kilpailu = {
         yhdistys: yhdistys,
         paikka: paikka,
@@ -46,7 +46,7 @@ function tallennaKilpailu(yhdistys, paikka, ajankohta, laukausmaara) {
         console.error('Kilpailun tallennus epäonnistui:', event.target.error);
     };
 }
-*/
+
 // kilpailun tietojen näyttäminen
 function naytaKilpailunTiedot(kilpailuId, yhdistys, paikka, ajankohta, laukausmaara) {
     document.getElementById("kilpailun-tiedot").innerHTML = `
@@ -74,8 +74,8 @@ function naytaKilpailunTiedot(kilpailuId, yhdistys, paikka, ajankohta, laukausma
 
 // Kilpailun poistaminen
 function poistaKilpailu(kilpailuId) {
-    let transaction = db.transaction(['Kilpailut'], 'readwrite');
-    let store = transaction.objectStore('Kilpailut');
+    let transaction = db.transaction(['Kilpailu'], 'readwrite');
+    let store = transaction.objectStore('Kilpailu');
     let deleteRequest = store.delete(kilpailuId);
 
     deleteRequest.onsuccess = function() {
