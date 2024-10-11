@@ -9,7 +9,7 @@ body {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
-    max-width: 500px; 
+    max-width: 550px; 
     margin: 0 auto;
     text-align: center; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -121,4 +121,9 @@ button {
     font-size: 28px;
     font-weight: bold;
     text-decoration: none;
+}
+
+input[type="text"], input[type="date"], input[type="number"] {
+    width: 100%; 
+    box-sizing: border-box; 
 }

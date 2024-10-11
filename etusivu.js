@@ -13,13 +13,16 @@ function teeNavigointi() {
     let nav = document.createElement('nav');
     let lista = document.createElement('ul');
 
-    let sivut = ['Kisan Luonti', 'Kilpailijan Luonti', 'Tulokset'];
+    let sivut = [
+        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.html' },
+        { nimi: 'Kilpailijan Luonti', tiedosto: 'kilpailijanluonti.html' },
+        { nimi: 'Tulokset', tiedosto: 'tulokset.html' }
+    ];
     
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        ladattavaSivu = `${sivu.toLowerCase().replace(/\s+/g, '')}.js`; //a.href
-        console.log(ladattavaSivu);
+        a.href = `#${sivu.toLowerCase().replace(/\s+/g, '')}`;
         a.textContent = sivu; // Linkin teksti
         li.appendChild(a);
         lista.appendChild(li);
