@@ -22,8 +22,9 @@ function teeNavigointi() {
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        a.href = `#${sivu.toLowerCase().replace(/\s+/g, '')}`;
-        a.textContent = sivu; // Linkin teksti
+        ladattavaSivu = `${sivu.tiedosto.toLowerCase().replace(/\s+/g, '')}.js`; //a.href
+        console.log(ladattavaSivu);
+        a.textContent = sivu.nimi; // Linkin teksti
         li.appendChild(a);
         lista.appendChild(li);
     });
