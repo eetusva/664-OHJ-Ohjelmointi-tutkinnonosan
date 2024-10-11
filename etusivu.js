@@ -7,20 +7,21 @@ function teeOtsikko() {
 }
 
 function teeNavigointi() {
+    let ladattavaSivu;
     let nav = document.createElement('nav');
     let lista = document.createElement('ul');
 
     let sivut = [
-        { nimi: 'Kisan Luonti', tiedosto: 'kisanluonti.html' },
-        { nimi: 'Kilpailijan Luonti', tiedosto: 'kilpailijanluonti.html' },
-        { nimi: 'Tulokset', tiedosto: 'tulokset.html' }
+        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.js' },
+        { nimi: 'Kilpailijan Luonti', tiedosto: 'app.js' },
+        { nimi: 'Tulokset', tiedosto: 'tulokset.js' }
     ];
     
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        a.href = sivu.tiedosto; 
-        a.textContent = sivu.nimi; 
+        ladattavaSivu = sivu.tiedosto; //a.href
+        a.textContent = sivu.nimi; // Linkin teksti
         li.appendChild(a);
         lista.appendChild(li);
     });
@@ -28,6 +29,20 @@ function teeNavigointi() {
     nav.appendChild(lista);
     return nav;
 }
+
+
+
+
+function lataaSisalto(ladattavaSivu) {  // lisäys
+    const script = document.createElement('script');  
+    script.src = ladattavaSivu;
+    script.type = 'module'; //vaiko 'module'?
+    
+    const sisaltoElementti = document.getElementById('app');
+    sisaltoElementti.innerHTML = '';
+    
+    sisaltoElementti.appendChild(script);
+  }
 
 function teePaasivu() {
     let section = document.createElement('section');
