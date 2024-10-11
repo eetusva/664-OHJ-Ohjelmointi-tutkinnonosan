@@ -101,7 +101,7 @@ function closeModal() {
 
 window.onclick = function(event) {
     const modal = document.getElementById('gdprModal');
-    if (event.target === modal) {
+    if (event.target === modal || modal.contains(event.target)) {
         modal.style.display = 'none';
     }
 }
