@@ -115,7 +115,7 @@ window.onclick = function(event) {
 }
 
 document.querySelectorAll('li')[0].addEventListener('click', function() {
-    lataaSisalto('luokilpailu.js');
+    lataaSisalto('kisanluonti.js');
 });
 
 document.querySelectorAll('li')[1].addEventListener('click', function() {
