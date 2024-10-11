@@ -14,16 +14,15 @@ function teeNavigointi() {
     let lista = document.createElement('ul');
 
     let sivut = [
-        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.html' },
-        { nimi: 'Kilpailijan Luonti', tiedosto: 'kilpailijanluonti.html' },
-        { nimi: 'Tulokset', tiedosto: 'tulokset.html' }
+        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.js' },
+        { nimi: 'Kilpailijan Luonti', tiedosto: 'app.js' },
+        { nimi: 'Tulokset', tiedosto: 'tulokset.js' }
     ];
     
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        ladattavaSivu = `${sivu.tiedosto.toLowerCase().replace(/\s+/g, '')}.js`; //a.href
-        console.log(ladattavaSivu);
+        ladattavaSivu = sivu.tiedosto; //a.href
         a.textContent = sivu.nimi; // Linkin teksti
         li.appendChild(a);
         lista.appendChild(li);

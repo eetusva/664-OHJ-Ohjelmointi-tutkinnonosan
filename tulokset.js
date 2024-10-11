@@ -147,12 +147,48 @@
 
             // Avataan tietokanta
             const request = indexedDB.open('Kilpailijatietokanta', 1);
+            const kisaRequest = indexedDB.open('KisaDataDB', 1);
     
             request.onerror = function(event) {
                 console.error('Tietokannan avaus epäonnistui.', event);
                 reject('Tietokannan avaus epäonnistui.');
             };
+            /*
+            kisaRequest.onerror = function(event) {
+                console.error('Kisatietokannan avaus epäonnistui.', event);
+                reject('Kisatietoja ei haettu, epäonnistui.');
+            }
     
+            kisaRequest.onsuccess = function(event) {
+                const kisadb = event.target.result;
+                const kisaTransaction = kisadb.transaction('Kilpailut', 'readonly');
+                const kisaObjectStore = kisaTransaction.objectStore('Kilpailut');
+
+                const kilpailutiedot = [];
+
+                const kisaRequestAll = kisaObjectStore.openCursor();
+    
+                kisaRequestAll.onsuccess = function(event) {
+                    
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        kilpailutiedot.push(cursor.value); // Lisätään arvot listaan
+                        cursor.continue(); // Siirrytään seuraavaan kilpailijaan
+                    } else {
+                        // Kaikki tiedot on haettu, palautetaan arvot
+                        resolve(kilpailutiedot);
+                    }
+                };
+    
+                console.log(kilpailutiedot);
+
+                kisaRequestAll.onerror = function(event) {
+                    console.error('Tietojen haku epäonnistui.', event);
+                    reject('Tietojen haku epäonnistui.');
+                }; 
+
+            } */
+
             request.onsuccess = function(event) {
                 const db = event.target.result;
                 const transaction = db.transaction('Kilpailijat', 'readonly');
