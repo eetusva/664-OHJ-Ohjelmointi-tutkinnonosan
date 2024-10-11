@@ -12,15 +12,15 @@ function teeNavigointi() {
     let lista = document.createElement('ul');
 
     let sivut = [
-        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.html' },
-        { nimi: 'Kilpailijan Luonti', tiedosto: 'app.js' },
-        { nimi: 'Tulokset', tiedosto: 'tulokset.js' }
+        { nimi: 'Kisan Luonti', tiedosto: 'kisanluonti.html' },
+        { nimi: 'Kilpailijan Luonti', tiedosto: 'kilpailijanluonti.html' },
+        { nimi: 'Tulokset', tiedosto: 'tulokset.html' }
     ];
     
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        ladattavaSivu = sivu.tiedosto; //a.href
+        a.href = sivu.tiedosto; //a.href
         a.textContent = sivu.nimi; // Linkin teksti
         li.appendChild(a);
         lista.appendChild(li);
@@ -32,7 +32,7 @@ function teeNavigointi() {
 
 
 
-
+/*
 function lataaSisalto(ladattavaSivu) {  // lisäys
     const script = document.createElement('script');  
     script.src = ladattavaSivu;
@@ -43,7 +43,7 @@ function lataaSisalto(ladattavaSivu) {  // lisäys
     
     sisaltoElementti.appendChild(script);
   }
-
+*/
 function teePaasivu() {
     let section = document.createElement('section');
 
