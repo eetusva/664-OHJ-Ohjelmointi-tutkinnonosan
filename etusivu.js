@@ -79,17 +79,16 @@ function infoGDPR() {
     
     <h3>Henkilöstä kerättävät tiedot:</h3>
     <pre>
-    -Nimi
-    -Yhdistys
-    -Summittainen ikä
+  -Nimi
+  -Yhdistys
+  -Summittainen ikä
     </pre>
     <p>
         Kaikki tiedot tallentuvat vain päätelaitteeseen,
         mitään tietoja ei lähetetä verkkoon. <br><br>
-        Kaikki päätelaitteeseen tallentuvat tiedot salataan
-        ennen tallentamista. <br><br>
-        Kun ohjelma suljetaan, poistuvat kaikki tiedot
-        myös päätelaitteelta.
+        Kaikki päätelaitteeseen tallentuvat tiedot voi 
+        poistaa etusivun 'Tyhjennä tietokanta'-painikkeella 
+        esim. kilpailun päätyttyä (suositus).
     </p>`;
 
     document.getElementById('modalInfo').innerHTML = infomsg;
@@ -102,7 +101,7 @@ function closeModal() {
 
 window.onclick = function(event) {
     const modal = document.getElementById('gdprModal');
-    if (event.target === modal) {
+    if (event.target === modal || modal.contains(event.target)) {
         modal.style.display = 'none';
     }
 }

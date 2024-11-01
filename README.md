@@ -47,6 +47,5 @@ ver. 0.08
 - styles_etusivu.css tiedostoon muutokset tekstiboksien asettelulle.
 
 ver. 0.09  
-- SPA
 - Muotoilumuutokset
 - tulossivun muotoilut

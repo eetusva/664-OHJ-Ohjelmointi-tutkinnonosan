@@ -408,8 +408,9 @@ request.onerror = function(event) {
                     button.disabled = true;
                 });
                 addPoints.disabled = true;
+                removeButton.disabled = true;
             } else {
-                
+                removeButton.disabled = false;
                 addPoints.disabled = false;
                 scoreButtons.forEach(button => {
                     button.disabled = false;
@@ -531,6 +532,7 @@ addPoints.addEventListener('click', function () {
              console.error('Pisteiden päivityksessä tapahtui jokin virhe:', error);
         });
         addPoints.disabled = true;
+        removeButton.disabled = true;
         osumat.textContent = ''; // Tyhjennys
 
         } else {
