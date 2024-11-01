@@ -12,7 +12,7 @@ function teeNavigointi() {
     let lista = document.createElement('ul');
 
     let sivut = [
-        { nimi: 'Kisan Luonti', tiedosto: 'kilpailu.html' },
+        { nimi: 'Kisan Luonti', tiedosto: 'kisanluonti.html' },
         { nimi: 'Kilpailijan Luonti', tiedosto: 'kilpailijanluonti.html' },
         { nimi: 'Tulokset', tiedosto: 'tulokset.html' }
     ];
@@ -20,7 +20,7 @@ function teeNavigointi() {
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        ladattavaSivu = `${sivu.tiedosto.toLowerCase().replace(/\s+/g, '')}.js`; //a.href
+        a.href = sivu.tiedosto
         console.log(ladattavaSivu);
         a.textContent = sivu.nimi; // Linkin teksti
         li.appendChild(a);
