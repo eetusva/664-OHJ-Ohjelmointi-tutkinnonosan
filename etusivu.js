@@ -20,8 +20,7 @@ function teeNavigointi() {
     sivut.forEach(function(sivu) {
         let li = document.createElement('li');
         let a = document.createElement('a');
-        a.href = sivu.tiedosto
-        console.log(ladattavaSivu);
+        a.href = sivu.tiedosto; //a.href
         a.textContent = sivu.nimi; // Linkin teksti
         li.appendChild(a);
         lista.appendChild(li);

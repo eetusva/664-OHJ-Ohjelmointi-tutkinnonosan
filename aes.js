@@ -259,26 +259,5 @@ async function puraTiedot(haettuTieto) {
   }
 }
 
-
-  
-  
-  /* testifunktiot
-
-  kilpailijat = {
-    ['Late', 'Liukas', '[X,X,X,10,10,9,9,9,8,6]', 91]
-    ['Nils-Aslak', 'Valkeapää', '[10,9,9,9,9,9,8,8,8,7]', 86]
-}
-
-(async () => {
-  // Tallennetaan esimerkkitiedot
-  await salattuDataTallennus(kilpailijat[0]);
-
-  // Toimitus
-  setTimeout(async () => {
-    await puraKaikkiTiedot();  // Puretaan kaikki tietokannan tiedot
-  }, 2000);  // Viive
-})(); 
-
-  */
   
   

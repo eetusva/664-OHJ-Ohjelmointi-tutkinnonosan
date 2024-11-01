@@ -540,4 +540,3 @@ addPoints.addEventListener('click', function () {
         }
         });    
     });
-//});

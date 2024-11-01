@@ -1,3 +1,4 @@
+
 export function avaaTietokanta() {
     return new Promise((resolve, reject) => {
         // Avaa tietokanta, versio 1
