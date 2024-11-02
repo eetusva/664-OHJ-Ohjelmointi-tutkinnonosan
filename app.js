@@ -441,7 +441,7 @@ request.onerror = function(event) {
         
                
                 if (value === 'X') {
-                    yhteisPisteet += 10;
+                    yhteisPisteet += 10.01;
                     napakympit++;
                     osumalista.push('X');
                 } else {
@@ -454,7 +454,7 @@ request.onerror = function(event) {
                 viimeisin_osuma.textContent = value;
                 viimeisin_osuma.classList.replace('poisto-animate-grow','osumat-animate-grow'); //luokan vaihto että tämä vihreänä
                 yhteisOsumatEl.textContent = yhteisOsumat;
-                yhteisPisteetEl.textContent = yhteisPisteet;
+                yhteisPisteetEl.textContent = Math.floor(yhteisPisteet);
                 napakympitEl.textContent = napakympit;
                 osumat.textContent = osumalista.join(' ');
                 animatePoints(viimeisin_osuma); // animoi viimeisimmän lisäyksen
@@ -485,7 +485,7 @@ removeButton.addEventListener('click',() => { // Poisteteaan viimeinen osuma lis
     let value = osumalista[osumalista.length-1];    
                
     if (value === 'X') {
-        yhteisPisteet -= 10;
+        yhteisPisteet -= 10.01;
         napakympit--;
         yhteisOsumat -=1;
         yhteisPisteet - value;

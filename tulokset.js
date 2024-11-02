@@ -1,7 +1,38 @@
 
 
 let sija = 1;
-let sarja;
+//et sarja;
+
+const { avaaTietokanta } = await import('./db.js')
+const db = await avaaTietokanta()
+
+const dayChange = (paivays) => {
+    const [vuosi, kuukausi, paiva] = paivays.split('-')
+    return `${paiva}.${kuukausi}.-${vuosi.slice(2)}`
+}
+
+export function haeKilpailu() {
+    return new Promise((resolve, reject) => {
+        let transaction = db.transaction(['Kilpailu'], 'readonly');
+        let objectStore = transaction.objectStore('Kilpailu');
+        let request = objectStore.get(1);
+        let kisaTieto = []
+
+        request.onsuccess = function(event) {
+            kisaTieto.push(request.result.paikka)
+            const paivays = dayChange(request.result.ajankohta)
+            kisaTieto.push(paivays)
+            kisaTieto.push(request.result.laukausmaara)
+            resolve(kisaTieto); // Palauttaa kilpailun tiedot
+        };
+
+        request.onerror = function(event) {
+            console.error("Kilpailun haku epäonnistui", event);
+            reject('Kilpailun haku epäonnistui');
+        };
+    });
+}
+
 
 let kontti = document.createElement('div')
 kontti.className = 'kontti'
@@ -11,9 +42,16 @@ etusivuBtn.textContent = 'Etusivu';
 kontti.appendChild(etusivuBtn);
 etusivuBtn.onclick = () => {location.href = 'index.html'}
 
+
+const kilpailuTieto = await haeKilpailu()
+//console.log(kilpailuTieto)
 let kilpailuTiedot = document.createElement('div');
 kontti.appendChild(kilpailuTiedot);
-kilpailuTiedot.textContent = 'Kilpailun tiedot';
+kilpailuTiedot.style.fontSize = '1.5em'
+kilpailuTiedot.style.fontWeight = '600'
+kilpailuTiedot.style.textAlign = 'center'
+kilpailuTiedot.textContent = kilpailuTieto.join(' || ')+' lks'
+
 
 let poyta = document.createElement('table');
 poyta.className = 'tulokset';
@@ -97,7 +135,7 @@ document.body.appendChild(modaali);
 
 
 // rivinlisäysfunktio
-function lisaaRivi(nimi, osumat, tulos, id, seura) {
+function lisaaRivi(nimi, osumat, tulos, id, seura, sarja) {
     
     const tableBody = document.querySelector('tbody');
     const rivi = document.createElement('tr');
@@ -113,7 +151,7 @@ function lisaaRivi(nimi, osumat, tulos, id, seura) {
     osumaSarake.textContent = osumat;
     
     const tulosSarake = document.createElement('td');
-    tulosSarake.textContent = tulos;
+    tulosSarake.textContent = Math.floor(tulos);
 
     const idSarake = document.createElement('td')
     idSarake.textContent = id;
@@ -125,6 +163,7 @@ function lisaaRivi(nimi, osumat, tulos, id, seura) {
 
     const sarjaSarake = document.createElement('td');
     sarjaSarake.textContent = sarja;
+    console.log(sarja)
     sarjaSarake.style.display = 'none';
 
     rivi.appendChild(sijaSarake);
@@ -190,7 +229,7 @@ function haeSarjoittain(sarja) {
     haeKilpailijat().then((kilpailijat) => {
         const sarjaKilpailijat = sarjoittain(kilpailijat, sarja);
         sarjaKilpailijat.forEach(item => {
-            lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet, item.id, item.seura, item.sarja);
+            lisaaRivi(item.etunimi + ' ' + item.sukunimi, item.tulokset.osumalista, item.tulokset.pisteet, item.id, item.seura, item.luokka);
         });
         //console.log('Kilpailijat:', kilpailijat);
     }).catch((error) => {
