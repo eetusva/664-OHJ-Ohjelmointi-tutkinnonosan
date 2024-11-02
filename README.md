@@ -49,3 +49,7 @@ ver. 0.08
 ver. 0.09  
 - Muotoilumuutokset
 - tulossivun muotoilut
+
+ver. 0.10  
+- Kilpailun tiedot lisätty tulossivulle
+- Napakympin paremmuus vs 10 osuma muutettu
